@@ -1,4 +1,4 @@
-import bottle
+from bottle import run
 from bin import bin
 
-bottle.run(host='localhost', port=8080, debug=True)
+run(host='localhost', port=8080, debug=True)
