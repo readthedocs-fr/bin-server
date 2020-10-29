@@ -1,6 +1,7 @@
 from bottle import route, template, error, static_file
 from os import path
-from bin import root
+from bin import root, nameOfExtension
+from bin.models.code import get_code_by_snippet
 
 @route('/assets/<dir>/<filepath:path>')
 def styles(dir=None, filepath=None):
@@ -17,7 +18,9 @@ def publish_new_snippet():
 @route('/<snippet>', method='GET')
 @route('/<snippet>.<ext>', method='GET')
 def display_with_coloration(snippet, ext=None):
-    return 'display_with_coloration'
+    code = get_code_by_snippet(snippet)
+    language = nameOfExtension[ext] if ext in nameOfExtension else ""
+    return template('coloration', code=code, language=language)
 
 @route('/raw/<snippet>', method='GET')
 @route('/raw/<snippet>.<ext>', method='GET')
