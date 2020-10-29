@@ -1,5 +1,6 @@
 import textwrap
 import itertools
+from genpw import pronounceable_passwd
 
 fake_database = {
     "abc": textwrap.dedent("""\
@@ -14,15 +15,13 @@ fake_database = {
 }
 
 class Snippet:
-    idgen = itertools.count()
-
     def __init__(self, ident, code):
         self.id = ident
         self.code = code
 
     @classmethod
     def create(cls, code):
-        ident = str(next(cls.idgen))
+        ident = pronounceable_passwd(6)
         fake_database[ident] = code
         return cls(ident, code)
 
