@@ -1,0 +1,20 @@
+% include('joints/header.html')
+
+    % if code:
+    <pre>
+        <code class="lang-{{lang}}" id="code">{{code}}</code>
+    </pre>
+
+    <script>
+        const linesElement = document.getElementById("lines");
+        const code = `{{code}}`;
+
+        let htmlFormat = "1";
+
+        for(let numberOfLines = 2; numberOfLines <= code.split('\n').length; numberOfLines++) htmlFormat += `<br>${numberOfLines}`;
+
+        linesElement.innerHTML = htmlFormat;
+    </script>
+    % end
+
+% include('joints/footer.html')

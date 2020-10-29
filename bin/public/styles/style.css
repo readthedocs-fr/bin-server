@@ -1,0 +1,70 @@
+html, body {
+    height: 100vh;
+    width: 100vw;
+}
+
+body {
+    background-color: #1e282d;
+    color: #a9a5a5;
+
+    font-family: Consolas;
+
+    display: flex;
+    padding: 2em 0.5em;
+    padding-right: 2em;
+}
+
+#lines {
+    width: 40px;
+    text-align: right;
+    margin-right: 2em;
+
+    color: #707070;
+}
+
+.post-snippet {
+    position: relative;
+    width: 100%;
+}
+
+.post-snippet textarea {
+    background-color: transparent;
+    border: none;
+    resize: none;
+
+    width: 100%;
+    height: 100%;
+
+    font-family: Consolas;
+    color: #a9a5a5;
+}
+
+.post-snippet button {
+    position: absolute;
+    bottom: 2.25em;
+    right: 2.25em;
+    background-color: #1d2529;
+    border-radius: 9999px;
+    border: none;
+    height: 4em;
+    width: 4em;
+
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.post-snippet button svg {
+    fill: #707070;
+    height: 1.25em;
+    width: 1.25em;
+}
+
+pre {
+    display: flex;
+    width: 100%;
+}
+
+pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    font-family: Consolas;
+}
