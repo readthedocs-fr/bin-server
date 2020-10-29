@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang=fr>
-    % include('layouts/header.html')
+	<head>
+    	% include('layouts/head.html')
+   	</head>
 
     <body>
+    	% include('layouts/header.html')
+
         <form action="/new" method="POST">
             <textarea name="code">
 
             </textarea>
-            <input type="submit" value="valider" />
+            <input type="submit">
         </form>
 
         % include('layouts/footer.html')
