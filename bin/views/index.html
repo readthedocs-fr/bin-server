@@ -1,10 +1,15 @@
-% include('layouts/header.html')
+<!DOCTYPE html>
+<html lang=fr>
+    % include('layouts/header.html')
 
-<form action="/new" method="POST">
-    <textarea>
+    <body>
+        <form action="/new" method="POST">
+            <textarea name="code">
 
-    </textarea>
-    <input type="submit" value="valider" />
-</form>
+            </textarea>
+            <input type="submit" value="valider" />
+        </form>
 
-% include('layouts/footer.html')
+        % include('layouts/footer.html')
+    </body>
+</html>
