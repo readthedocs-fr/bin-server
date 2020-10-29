@@ -10,9 +10,11 @@ languages_exts = {
     'js': 'javascript',
     'md': 'markdown',
     'cs': 'csharp',
-    'sh': 'kotlin',
+    'sh': 'bash',
+    'kt': 'kotlin',
     'h': 'objectivec',
-    'hpp': 'cpp',
+    'cpp': 'cpp',
+    'c': 'c',
     'rb': 'ruby',
     'rs': 'rust',
     'ts': 'typescript',
@@ -37,9 +39,10 @@ def index():
 @bottle.route(path='/new', method='POST')
 def post_new_snippet():
     code = bottle.request.forms.get('code')
+    ext = bottle.request.forms.get('lang')
     snippet = pronounceable_passwd(17)
     snippets[snippet] = code
-    return bottle.redirect(f'/{snippet}')
+    return bottle.redirect(f'/{snippet}.{ext}')
 
 
 @bottle.route(path='/<id>', method='GET')
