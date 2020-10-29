@@ -1,18 +1,9 @@
 import textwrap
 import itertools
+from redis import Redis
 from genpw import pronounceable_passwd
 
-fake_database = {
-    "abc": textwrap.dedent("""\
-        void _delete_from_node(Tree tree, Duck duck) {
-            generic_type _duck = getMemberByName(tree, duck);
-            if(strcmp(duck->name, tree->root->current->name) == 0) {
-                free(tree);
-            }
-            delete_tree_from_node(_duck); 
-        }
-        """)
-}
+database = Redis(host='localhost', port=6379)
 
 class Snippet:
     def __init__(self, ident, code):
@@ -22,10 +13,10 @@ class Snippet:
     @classmethod
     def create(cls, code):
         ident = pronounceable_passwd(6)
-        fake_database[ident] = code
+        database.set(ident, code)
         return cls(ident, code)
 
     @classmethod
     def get_by_id(cls, snippet_id):
-        code = fake_database[snippet_id]
+        code = database.get(snippet_id).decode("utf-8")
         return cls(snippet_id, code)
