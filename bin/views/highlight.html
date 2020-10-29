@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang=fr>
+	<head>
+    	% include('layouts/head.html')
+	    <link rel=stylesheet href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/styles/default.min.css">
+	    <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.2/build/highlight.min.js"></script>
+	    <script>hljs.initHighlightingOnLoad();</script>
+	</head>
+
+    <body>
+    	% include('layouts/header.html')
+        <pre><code class="language-{{language}}">{{code}}</code></pre>
+        % include('layouts/footer.html')
+    </body>
+</html>
