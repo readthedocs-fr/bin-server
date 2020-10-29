@@ -45,6 +45,20 @@ body {
     color: #a9a5a5;
 }
 
+.post-snippet select {
+    position: absolute;
+    bottom: 3.25em;
+    right: 8em;
+    background-color: #1d2529;
+    border-radius: 1em;
+    border: none;
+    width: 15em;
+    padding: 0.25em 1em;
+    color: #fff;
+
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
 .post-snippet button {
     position: absolute;
     bottom: 2.25em;
@@ -73,10 +87,6 @@ pre {
 pre code {
     background: transparent !important;
     padding: 0 !important;
-<<<<<<< Updated upstream
     font-family: Consolas, sans-serif;
-=======
-    font-family: Consolas;
     width: inherit;
->>>>>>> Stashed changes
 }
