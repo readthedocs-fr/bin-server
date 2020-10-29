@@ -32,6 +32,8 @@ def assets(filepath):
 @bt.route('/new', method='POST')
 def post_new():
     code = bt.request.forms.get('code').encode('latin-1').decode('utf-8')
+    if not code:
+        raise bt.HTTPError(417, "Missing code")
     snippet = Snippet.create(code)
     bt.redirect(f'/{snippet.id}')
 
