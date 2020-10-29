@@ -1,7 +1,9 @@
 import bottle
+from genpw import pronounceable_passwd
 from os import path
 from bin import root
 
+snippets = {}
 
 languages_exts = {
     'py': 'python',
@@ -34,13 +36,16 @@ def index():
 
 @bottle.route(path='/new', method='POST')
 def post_new_snippet():
-    return 'New snippet'
+    code = bottle.request.forms.get('code')
+    snippet = pronounceable_passwd(17)
+    snippets[snippet] = code
+    return bottle.redirect(f'/{snippet}')
 
 
 @bottle.route(path='/<id>', method='GET')
 @bottle.route(path='/<id>.<ext>', method='GET')
-def get_highlight_snippet(id, ext='py'):
-    code = '@route(\'/raw/<snippet_id>\')\n@route(\'/raw/<snippet_id>.<ext>\', method=\'GET\')\ndef get_raw_snippet(snippet_id, ext=None):\n    return database.get(snippet_id)'
+def get_highlight_snippet(id, ext='txt'):
+    code = snippets[id]
     if code:
         return bottle.template('highlight.html', code=code, lang=languages_exts.get(ext))
     raise bottle.HTTPError(404, 'Snippet not found')
@@ -49,7 +54,7 @@ def get_highlight_snippet(id, ext='py'):
 @bottle.route(path='/raw/<id>', method='GET')
 @bottle.route(path='/raw/<id>.<ext>', method='GET')
 def get_raw_snippet(id, ext='txt'):
-    return 'Raw snippet'
+    return bottle.template('raw.html', code=snippets[id])
 
 
 @bottle.error()
