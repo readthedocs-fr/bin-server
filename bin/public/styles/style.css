@@ -12,6 +12,8 @@ body {
     display: flex;
     padding: 2em 0.5em;
     padding-right: 2em;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 * {
@@ -65,10 +67,16 @@ body {
 pre {
     display: flex;
     width: 100%;
+    height: min-content;
 }
 
 pre code {
     background: transparent !important;
     padding: 0 !important;
+<<<<<<< Updated upstream
     font-family: Consolas, sans-serif;
+=======
+    font-family: Consolas;
+    width: inherit;
+>>>>>>> Stashed changes
 }
