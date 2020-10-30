@@ -66,11 +66,7 @@ pre {
 pre code {
     background: transparent !important;
     padding: 0 !important;
-<<<<<<< HEAD
     font-family: Consolas, monospace;
     width: inherit;
 }
-=======
-    font-family: Consolas;
-}
->>>>>>> parent of a8300de... Merge pull request #4 from Acaretia/bin-front
+
