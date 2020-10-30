@@ -18,5 +18,7 @@ class Snippet:
 
     @classmethod
     def get_by_id(cls, snippet_id):
-        code = database.get(snippet_id).decode("utf-8")
-        return cls(snippet_id, code)
+        code = database.get(snippet_id)
+        if not code:
+            raise KeyError('Snippet not fond')
+        return cls(snippet_id, code.decode('utf-8'))
