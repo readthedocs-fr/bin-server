@@ -1,0 +1,20 @@
+<meta charset=utf-8>
+<title>ReadTheDocs - bin</title>
+
+<meta name=viewport content="width=device-width, initial-scale=1.0">
+<meta name=author content="ReadTheDocs">
+<meta name=title content="ReadTheDocs Bin">
+<meta name=description content="A simple pastebin">
+<meta name=theme-color content="#1e282d">
+<meta name=color-scheme content="only light">
+
+<link rel=stylesheet href="/assets/styles/minireset.css">
+<link rel=stylesheet href="/assets/styles/style.css">
+<script>
+	const onloads = [];  // Push your onload function here
+	windows.onload = function() {
+		for (let onload of onloads) {
+			onload();
+		}
+	}
+</script>

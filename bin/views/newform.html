@@ -1,19 +1,35 @@
 <!DOCTYPE html>
 <html lang=fr>
-	<head>
-    	% include('layouts/head.html')
-   	</head>
-
+    <head>
+        % include('head.html')
+    </head>
     <body>
-    	% include('layouts/header.html')
-
-        <form action="/new" method="POST">
-            <textarea name="code">
-
-            </textarea>
-            <input type="submit">
+        <form action="/new" method="POST" class="post-snippet">
+            <textarea spellcheck="false" placeholder="Entrer votre code." name="code" autofocus></textarea>
+            <select name="lang">
+                <option value="txt">Plain text</option>
+                <option value="py">Python</option>
+                <option value="js">JavaScript</option>
+                <option value="md">Markdown</option>
+                <option value="cs">C#</option>
+                <option value="sh">Bash</option>
+                <option value="kt">Kotlin</option>
+                <option value="h">Objective C</option>
+                <option value="cpp">C++</option>
+                <option value="c">C</option>
+                <option value="rb">Ruby</option>
+                <option value="rs">Rust</option>
+                <option value="ts">TypeScript</option>
+                <option value="yml">Yaml</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+            </select>
+            <button type=submit>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                </svg>
+            </button>
         </form>
-
-        % include('layouts/footer.html')
     </body>
 </html>
