@@ -7,17 +7,11 @@ body {
     background-color: #1e282d;
     color: #a9a5a5;
 
-    font-family: Consolas, monospace;
+    font-family: Consolas;
 
     display: flex;
     padding: 2em 0.5em;
     padding-right: 2em;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
-* {
-    outline: none;
 }
 
 #lines {
@@ -41,22 +35,8 @@ body {
     width: 100%;
     height: 100%;
 
-    font-family: Consolas, monospace;
+    font-family: Consolas;
     color: #a9a5a5;
-}
-
-.post-snippet select {
-    position: absolute;
-    bottom: 3.25em;
-    right: 8em;
-    background-color: #1d2529;
-    border-radius: 1em;
-    border: none;
-    width: 15em;
-    padding: 0.25em 1em;
-    color: #fff;
-
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 .post-snippet button {
@@ -81,12 +61,10 @@ body {
 pre {
     display: flex;
     width: 100%;
-    height: min-content;
 }
 
 pre code {
     background: transparent !important;
     padding: 0 !important;
-    font-family: Consolas, monospace;
-    width: inherit;
+    font-family: Consolas;
 }
