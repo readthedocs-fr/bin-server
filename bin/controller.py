@@ -2,21 +2,23 @@ import bottle as bt
 from bin import root, config
 from bin.models import Snippet
 
-langmap = {
-    'py': 'python',
-    'js': 'javascript',
-    'md': 'markdown',
-    'cs': 'csharp',
-    'sh': 'shell',
-    'kts': 'kotlin',
-    'h': 'objectivec',
-    'hpp': 'cpp',
-    'rb': 'ruby',
-    'rs': 'rust',
-    'ts': 'typescript',
-    'yml': 'yaml',
-    'txt': 'plaintext',
-}
+languages = [
+    ('py', 'python'),
+    ('js', 'javascript'),
+    ('md', 'markdown'),
+    ('cs', 'csharp'),
+    ('sh', 'shell'),
+    ('kts', 'kotlin'),
+    ('h', 'objectivec'),
+    ('hpp', 'cpp'),
+    ('rb', 'ruby'),
+    ('rs', 'rust'),
+    ('ts', 'typescript'),
+    ('yml', 'yaml'),
+    ('txt', 'plaintext'),
+]
+exttolang = {ext: language for ext, language in languages}
+langtoext = {language: ext for ext, language in languages}
 
 
 @bt.route('/', method='GET')
@@ -45,8 +47,14 @@ def post_new():
     if not code:
         raise bt.HTTPError(417, "Missing code")
 
+    ext = ""
+    if bt.request.forms:
+        lang = bt.request.forms.get('lang')
+        if lang:
+            ext = "."+langtoext.get(lang, lang)
+
     snippet = Snippet.create(code.decode('utf-8'))
-    bt.redirect(f'/{snippet.id}')
+    bt.redirect(f'/{snippet.id}{ext}')
 
 
 @bt.route('/<snippet_id>', method='GET')
@@ -56,7 +64,7 @@ def get_html(snippet_id, ext=None):
         snippet = Snippet.get_by_id(snippet_id)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    language = langmap.get(ext, ext) or 'plaintext'
+    language = exttolang.get(ext, ext) or 'plaintext'
     return bt.template('highlight', code=snippet.code, language=language)
 
 
