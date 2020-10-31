@@ -2,8 +2,23 @@ import textwrap
 import itertools
 from redis import Redis
 from genpw import pronounceable_passwd
+from bin import config
 
-database = Redis(host='localhost', port=6379)
+
+if config.REDIS_ENABLED:
+    database = Redis(host=config.REDIS_HOST, port=config.REDIS_PORT)
+else:
+    print("Using dummy in-memory database")
+    class database:
+        db = {}
+
+        @classmethod
+        def set(cls, ident, code):
+            cls.db[ident] = code.encode()
+
+        @classmethod
+        def get(cls, ident):
+            return cls.db.get(ident)
 
 class Snippet:
     def __init__(self, ident, code):

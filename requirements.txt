@@ -1,3 +1,4 @@
 bottle==0.12.18
 genpw==1.0.0.post1
+python-dotenv==0.15.0
 redis==3.5.3

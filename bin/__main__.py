@@ -1,3 +1,4 @@
 from bottle import run
+from bin import config
 
-run(host='localhost', port=8080, debug=True)
+run(host=config.HOST, port=config.PORT, debug=True)
