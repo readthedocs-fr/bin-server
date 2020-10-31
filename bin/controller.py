@@ -1,24 +1,8 @@
 import bottle as bt
+from pathlib import Path
 from bin import root, config
 from bin.models import Snippet
-
-languages = [
-    ('py', 'python'),
-    ('js', 'javascript'),
-    ('md', 'markdown'),
-    ('cs', 'csharp'),
-    ('sh', 'shell'),
-    ('kts', 'kotlin'),
-    ('h', 'objectivec'),
-    ('hpp', 'cpp'),
-    ('rb', 'ruby'),
-    ('rs', 'rust'),
-    ('ts', 'typescript'),
-    ('yml', 'yaml'),
-    ('txt', 'plaintext'),
-]
-exttolang = {ext: language for ext, language in languages}
-langtoext = {language: ext for ext, language in languages}
+from bin.utils import parse_language, parse_extension
 
 
 @bt.route('/', method='GET')
@@ -41,20 +25,17 @@ def post_new():
 
     code = None
     if bt.request.files:
-        code = next(bt.request.files.values()).file.read(config.SNIPPET_MAX_SIZE)
+        part = next(bt.request.files.values())
+        ext = parse_extension(Path(part.filename).suffix[1:])
+        code = part.file.read(config.SNIPPET_MAX_SIZE)
     elif bt.request.forms:
+        ext = parse_extension(bt.request.forms.get('lang'))
         code = bt.request.forms.get('code', '').encode('latin-1')
     if not code:
         raise bt.HTTPError(417, "Missing code")
 
-    ext = ""
-    if bt.request.forms:
-        lang = bt.request.forms.get('lang')
-        if lang:
-            ext = "."+langtoext.get(lang, lang)
-
     snippet = Snippet.create(code.decode('utf-8'))
-    bt.redirect(f'/{snippet.id}{ext}')
+    bt.redirect(f'/{snippet.id}.{ext}')
 
 
 @bt.route('/<snippet_id>', method='GET')
@@ -64,7 +45,7 @@ def get_html(snippet_id, ext=None):
         snippet = Snippet.get_by_id(snippet_id)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    language = exttolang.get(ext, ext) or 'plaintext'
+    language = parse_language(ext)
     return bt.template('highlight', code=snippet.code, language=language)
 
 
