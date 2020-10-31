@@ -14,7 +14,7 @@ body {
     font-family: Consolas, monospace;
 
     display: flex;
-    padding: 2em 2em 2em 0.5em;
+    padding: 2em 2em 2em 2em;
 }
 
 #cloc {
