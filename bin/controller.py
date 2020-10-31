@@ -1,5 +1,5 @@
 import bottle as bt
-from bin import root
+from bin import root, config
 from bin.models import Snippet
 
 langmap = {
@@ -33,13 +33,13 @@ def assets(filepath):
 def post_new():
     content_length = bt.request.get_header('Content-Length')
     if content_length is None:
-        raise HTTPError(411, "Content-Length required")
-    if int(content_length) > 16384:  # 16kiB
-        raise HTTPError(413, "Payload too large, we accept maximum 16kiB")
+        raise bt.HTTPError(411, "Content-Length required")
+    if int(content_length) > config.SNIPPET_MAX_SIZE:
+        raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.SNIPPET_MAX_SIZE} bytes")
 
     code = None
     if bt.request.files:
-        code = next(bt.request.files.values()).file.read(16384)
+        code = next(bt.request.files.values()).file.read(config.SNIPPET_MAX_SIZE)
     elif bt.request.forms:
         code = bt.request.forms.get('code', '').encode('latin-1')
     if not code:
