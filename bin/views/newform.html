@@ -24,6 +24,13 @@
                 <option value="html">HTML</option>
                 <option value="css">CSS</option>
             </select>
+
+            <!-- TODO: style these ass trash looking inputs (you can change the labels but don't change the names) -->
+            <label for="infinite_views">Vues infinies</label>
+            <input type=checkbox name="infinite_views" checked>
+            <label for="max_views">Nombre de vues max</label>    <!-- TODO: don't show this input if infinite_views input is checked -->
+            <input type=number name="max_views">
+
             <button type=submit>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
