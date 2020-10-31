@@ -40,7 +40,7 @@ def post_new():
     max_views = float('+inf')
     if not forms.get('infinite_views'):
         try:
-            max_views = int(forms.get('max_views'))
+            max_views = float(forms.get('max_views', float('+inf')))
             if max_views < 1:
                 raise bt.HTTPError(400, 'Max views should be greater than 0')                   # TODO: error handling in front-side
         except ValueError as e:
