@@ -22,19 +22,31 @@ def post_new():
         raise bt.HTTPError(411, "Content-Length required")
     if int(content_length) > config.SNIPPET_MAX_SIZE:
         raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.SNIPPET_MAX_SIZE} bytes")
+    
+    files = bt.request.files
+    forms = bt.request.forms
 
     code = None
-    if bt.request.files:
+    if files:
         part = next(bt.request.files.values())
         ext = parse_extension(Path(part.filename).suffix[1:])
         code = part.file.read(config.SNIPPET_MAX_SIZE)
-    elif bt.request.forms:
+    elif forms:
         ext = parse_extension(bt.request.forms.get('lang'))
         code = bt.request.forms.get('code', '').encode('latin-1')
     if not code:
         raise bt.HTTPError(417, "Missing code")
 
-    snippet = Snippet.create(code.decode('utf-8'))
+    max_views = float('+inf')
+    if not forms.get('infinite_views'):
+        try:
+            max_views = int(forms.get('max_views'))
+            if max_views < 1:
+                raise bt.HTTPError(400, 'Max views should be greater than 0')                   # TODO: error handling in front-side
+        except ValueError as e:
+            raise bt.HTTPError(400, f"Max views '{forms.get('max_views')}' is not a number")    # TODO: error handling in front-side
+
+    snippet = Snippet.create(code.decode('utf-8'), max_views)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
