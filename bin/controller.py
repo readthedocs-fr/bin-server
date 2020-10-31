@@ -31,10 +31,21 @@ def assets(filepath):
 
 @bt.route('/new', method='POST')
 def post_new():
-    code = bt.request.forms.get('code').encode('latin-1').decode('utf-8')
+    content_length = bt.request.get_header('Content-Length')
+    if content_length is None:
+        raise HTTPError(411, "Content-Length required")
+    if int(content_length) > 16384:  # 16kiB
+        raise HTTPError(413, "Payload too large, we accept maximum 16kiB")
+
+    code = None
+    if bt.request.files:
+        code = next(bt.request.files.values()).file.read(16384)
+    elif bt.request.forms:
+        code = bt.request.forms.get('code', '').encode('latin-1')
     if not code:
         raise bt.HTTPError(417, "Missing code")
-    snippet = Snippet.create(code)
+
+    snippet = Snippet.create(code.decode('utf-8'))
     bt.redirect(f'/{snippet.id}')
 
 
