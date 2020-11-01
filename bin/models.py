@@ -8,23 +8,7 @@ from bin import config
 if config.REDIS_ENABLED:
     database = Redis(host=config.REDIS_HOST, port=config.REDIS_PORT)
 else:
-    print("Using dummy in-memory database")
-    class database:
-        db = {}
-
-        @classmethod
-        def hset(cls, ident, field, value):
-            if not cls.db.get(ident):
-                cls.db[ident] = {}
-            cls.db.get(ident)[field] = value.encode()
-
-        @classmethod
-        def hgetall(cls, ident):
-            return cls.db.get(ident)
-
-        @classmethod
-        def hincrby(cls, indent, field, incr):
-            cls.db.get(indent)[field] += incr
+    raise EnvironmentError('Disabled Redis database is not supported for now')
 
 
 class Snippet:
@@ -34,17 +18,18 @@ class Snippet:
         self.views_left = views_left
 
     @classmethod
-    def create(cls, code, views_left):
+    def create(cls, code, maxusage):
         ident = pronounceable_passwd(6)
         database.hset(ident, "code", code)
-        database.hset(ident, "views_left", views_left)
-        return cls(ident, code, views_left)
+        database.hset(ident, "views_left", maxusage)
+        return cls(ident, code, maxusage)
 
     @classmethod
     def get_by_id(cls, snippet_id):
         snippet = database.hgetall(snippet_id)
         code = snippet[b'code'].decode('utf-8')
         views_left = snippet[b'views_left'].decode('utf-8')
+
         if not code:
             raise KeyError('Snippet not fond')
 
