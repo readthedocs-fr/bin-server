@@ -3,6 +3,7 @@ from pathlib import Path
 from bin import root, config
 from bin.models import Snippet
 from bin.utils import parse_language, parse_extension
+import contextlib
 
 
 @bt.route('/', method='GET')
@@ -22,31 +23,36 @@ def post_new():
         raise bt.HTTPError(411, "Content-Length required")
     if int(content_length) > config.SNIPPET_MAX_SIZE:
         raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.SNIPPET_MAX_SIZE} bytes")
-    
+
     files = bt.request.files
     forms = bt.request.forms
 
+    # Default values
     code = None
+    ext = config.SNIPPET_DEAULT_EXTENSION
+    lang = 'plaintext'
+    maxusage = config.DEFAULT_SNIPPET_MAX_USAGE
+
+    # Extract from multi-part file
     if files:
-        part = next(bt.request.files.values())
-        ext = parse_extension(Path(part.filename).suffix[1:])
+        part = next(files.values())
+        with contextlib.suppress(ValueError):
+            ext = parse_extension(Path(part.filename).suffix[1:])
         code = part.file.read(config.SNIPPET_MAX_SIZE)
-    elif forms:
-        ext = parse_extension(bt.request.forms.get('lang'))
-        code = bt.request.forms.get('code', '').encode('latin-1')
+
+    # Extract from multi-part form or x-www-form-urlencoded
+    if forms:
+        with contextlib.suppress(ValueError, KeyError):
+            ext = parse_extension(forms['lang'])
+        with contextlib.suppress(KeyError):
+            code = forms['code'].encode('latin-1')
+        with contextlib.suppress(ValueError):
+            maxusage = int(forms['maxusage'])
+
     if not code:
         raise bt.HTTPError(417, "Missing code")
 
-    max_views = float('+inf')
-    if not forms.get('infinite_views'):
-        try:
-            max_views = float(forms.get('max_views', float('+inf')))
-            if max_views < 1:
-                raise bt.HTTPError(400, 'Max views should be greater than 0')                   # TODO: error handling in front-side
-        except ValueError as e:
-            raise bt.HTTPError(400, f"Max views '{forms.get('max_views')}' is not a number")    # TODO: error handling in front-side
-
-    snippet = Snippet.create(code.decode('utf-8'), max_views)
+    snippet = Snippet.create(code.decode('utf-8'), maxusage)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
