@@ -3,7 +3,6 @@ from pathlib import Path
 from bin import root, config
 from bin.models import Snippet
 from bin.utils import parse_language, parse_extension
-import contextlib
 
 
 @bt.route('/', method='GET')
@@ -21,38 +20,31 @@ def post_new():
     content_length = bt.request.get_header('Content-Length')
     if content_length is None:
         raise bt.HTTPError(411, "Content-Length required")
-    if int(content_length) > config.SNIPPET_MAX_SIZE:
-        raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.SNIPPET_MAX_SIZE} bytes")
+    if int(content_length) > config.MAXSIZE:
+        raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.MAXSIZE} bytes")
 
     files = bt.request.files
     forms = bt.request.forms
 
-    # Default values
     code = None
-    ext = config.SNIPPET_DEAULT_EXTENSION
-    lang = 'plaintext'
-    maxusage = config.DEFAULT_SNIPPET_MAX_USAGE
+    ext = parse_extension(config.DEFAULT_LANGUAGE)
+    maxusage = config.DEFAULT_MAXUSAGE
 
-    # Extract from multi-part file
-    if files:
-        part = next(files.values())
-        with contextlib.suppress(ValueError):
-            ext = parse_extension(Path(part.filename).suffix[1:])
-        code = part.file.read(config.SNIPPET_MAX_SIZE)
+    try:
+        if files:
+            part = next(files.values())
+            code = part.file.read(config.MAXSIZE)
+            ext = parse_extension(Path(part.filename).suffix.lstrip('.')) or ext
+        if forms:
+            code = forms.get('code', '').encode('latin-1') or code
+            ext = parse_extension(forms.get('lang')) or ext
+            maxusage = int(forms.get('maxusage') or maxusage)
+        if not code:
+            raise ValueError("Code is missing")
+    except ValueError as exc:
+        raise bt.HTTPError(400, str(exc))
 
-    # Extract from multi-part form or x-www-form-urlencoded
-    if forms:
-        with contextlib.suppress(ValueError, KeyError):
-            ext = parse_extension(forms['lang'])
-        with contextlib.suppress(KeyError):
-            code = forms['code'].encode('latin-1')
-        with contextlib.suppress(ValueError):
-            maxusage = int(forms['maxusage'])
-
-    if not code:
-        raise bt.HTTPError(417, "Missing code")
-
-    snippet = Snippet.create(code.decode('utf-8'), maxusage)
+    snippet = Snippet.create(code, max(maxusage, -1))
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
