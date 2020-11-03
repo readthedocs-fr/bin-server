@@ -18,9 +18,9 @@ load_dotenv(options.config)  # will use a sensitive default if -c is omitted
 
 HOST = os.getenv('RTDBIN_HOST', 'localhost')
 PORT = int(os.getenv('RTDBIN_PORT', options.port))
-SNIPPET_DEAULT_EXTENSION = os.getenv('RTDBIN_SNIPPET_DEFAULT_EXTENSION')
-SNIPPET_MAX_SIZE = int(os.getenv('RTDBIN_SNIPPET_MAX_SIZE', 16384))
-DEFAULT_SNIPPET_MAX_USAGE = int(os.getenv('RTDBIN_DEFAULT_SNIPPET_MAX_VIEWS')) if os.getenv('RTDBIN_DEFAULT_SNIPPET_MAX_VIEWS') else float('+inf')
+MAXSIZE = int(os.getenv('RTDBIN_MAXSIZE', 16384))
+DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'plaintext')
+DEFAULT_MAXUSAGE = int(os.getenv('RTDBIN_DEFAULT_MAXUSAGE', -1))
 REDIS_ENABLED = strtobool(os.getenv('REDIS_ENABLED', options.redis_enabled))
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))

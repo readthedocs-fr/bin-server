@@ -21,11 +21,11 @@ def parse_extension(lang_or_ext):
     lang_or_ext = (lang_or_ext or '').casefold()
     if lang_or_ext in exttolang:
         return lang_or_ext
-    return langtoext.get(lang_or_ext, 'txt')
+    return langtoext.get(lang_or_ext)
 
 
 def parse_language(lang_or_ext):
     lang_or_ext = (lang_or_ext or '').casefold()
     if lang_or_ext in langtoext:
         return lang_or_ext
-    return exttolang.get(lang_or_ext, 'plaintext')
+    return exttolang.get(lang_or_ext)
