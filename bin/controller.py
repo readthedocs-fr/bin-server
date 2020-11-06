@@ -29,6 +29,7 @@ def post_new():
     code = None
     ext = parse_extension(config.DEFAULT_LANGUAGE)
     maxusage = config.DEFAULT_MAXUSAGE
+    lifetime = config.DEFAULT_LIFETIME_HOURS
 
     try:
         if files:
@@ -39,12 +40,13 @@ def post_new():
             code = forms.get('code', '').encode('latin-1') or code
             ext = parse_extension(forms.get('lang')) or ext
             maxusage = int(forms.get('maxusage') or maxusage)
+            lifetime = int(forms.get('lifetime') or lifetime)
         if not code:
             raise ValueError("Code is missing")
     except ValueError as exc:
         raise bt.HTTPError(400, str(exc))
 
-    snippet = Snippet.create(code, max(maxusage, -1))
+    snippet = Snippet.create(code, max(maxusage, -1), lifetime)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
