@@ -21,7 +21,7 @@ def post_new():
     if content_length is None:
         raise bt.HTTPError(411, "Content-Length required")
     if int(content_length) > config.MAXSIZE:
-        raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.MAXSIZE} bytes")
+        raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.MAXSIZE}")
 
     files = bt.request.files
     forms = bt.request.forms
@@ -29,7 +29,7 @@ def post_new():
     code = None
     ext = parse_extension(config.DEFAULT_LANGUAGE)
     maxusage = config.DEFAULT_MAXUSAGE
-    lifetime = config.DEFAULT_LIFETIME_HOURS
+    lifetime = config.DEFAULT_LIFETIME
 
     try:
         if files:

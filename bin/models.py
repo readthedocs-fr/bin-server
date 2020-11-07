@@ -23,7 +23,7 @@ class Snippet:
         database.hset(ident, "code", code)
         database.hset(ident, "views_left", maxusage)
         if lifetime > 0:
-            database.expire(ident, lifetime * 3600)
+            database.expire(ident, lifetime)
         return cls(ident, code, maxusage)
 
     @classmethod
