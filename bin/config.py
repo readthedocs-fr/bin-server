@@ -1,6 +1,7 @@
 import os
 from argparse import ArgumentParser
 from dotenv import load_dotenv
+from metrics import Byte, Time
 
 def strtobool(s):
     try:
@@ -18,10 +19,10 @@ load_dotenv(options.config)  # will use a sensitive default if -c is omitted
 
 HOST = os.getenv('RTDBIN_HOST', 'localhost')
 PORT = int(os.getenv('RTDBIN_PORT', options.port))
-MAXSIZE = int(os.getenv('RTDBIN_MAXSIZE', 16384))
+MAXSIZE = Byte(os.getenv('RTDBIN_MAXSIZE', '16kiB'))
 DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'plaintext')
 DEFAULT_MAXUSAGE = int(os.getenv('RTDBIN_DEFAULT_MAXUSAGE', -1))
-DEFAULT_LIFETIME_HOURS = int(os.getenv('RTDBIN_DEFAULT_LIFETIME_HOURS', -1))
+DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', -1))
 REDIS_ENABLED = strtobool(os.getenv('REDIS_ENABLED', options.redis_enabled))
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
