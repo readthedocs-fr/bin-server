@@ -2,6 +2,7 @@
 <html lang=fr>
     <head>
         % include('head.html')
+        <script src="/assets/scripts/newform-button.js" defer></script>
     </head>
     <body>
         <form action="/new" method="POST" class="post-snippet">
@@ -43,29 +44,6 @@
                   <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
                 </svg>
             </button>
-
-            <script>
-                const code = document.getElementsByName('code')[0];
-                const button = document.querySelector('.post-snippet button');
-                const svg = button.querySelector('svg');
-
-                button.addEventListener('click', (event) => {
-                    if (!code.value) {
-                        event.preventDefault();
-                    }
-                });
-
-                code.addEventListener('input', () => {
-                    if (code.value) {
-                        button.classList.add('valid');
-                        svg.classList.add('valid');
-                        return;
-                    }
-
-                    button.classList.remove('valid');
-                    svg.classList.remove('valid');
-                });
-            </script>
         </form>
     </body>
 </html>
