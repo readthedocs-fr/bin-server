@@ -1,15 +1,27 @@
 * {
     outline: none;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100vh;
+    width: 100vw;
 }
 
 body {
-    background-color: #1e282d;
+    height: 100vh;
+    width: 100vw;
+
+    background: #1e282d;
     color: #a9a5a5;
 
     font-family: Consolas, monospace;
+    margin: 0;
+    padding: 0.5em;
+}
 
-    display: flex;
-    padding: 2em 2em 2em 0.5em;
+ol {
+    margin-top: 0;
 }
 
 #cloc {
@@ -21,8 +33,8 @@ body {
 }
 
 .post-snippet {
-    position: relative;
     width: 100%;
+    height: 100%;
 }
 
 .post-snippet textarea {
