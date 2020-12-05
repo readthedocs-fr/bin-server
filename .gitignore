@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 .floo
 .flooignore
+
+# Redis
+dump.rdb
