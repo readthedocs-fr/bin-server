@@ -18,3 +18,13 @@ code.addEventListener("input", () => {
   button.classList.remove("valid");
   svg.classList.remove("valid");
 });
+
+window.addEventListener("keydown", (event) => {
+  if (event.code === "Tab") {
+      const textarea = document.querySelector('textarea');
+      const pos = textarea.selectionStart;
+      const content = textarea.value;
+
+      textarea.value = content.substring(0, pos) + '\t' + content.substring(pos);
+  }
+});
