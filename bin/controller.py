@@ -2,6 +2,7 @@ import bottle as bt
 from pathlib import Path
 from bin import root, config, models
 from bin.utils import parse_language, parse_extension
+from bin.highlight import highlight
 
 
 @bt.route('/health', method='GET')
@@ -62,7 +63,8 @@ def get_html(snippet_id, ext=None):
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
     language = parse_language(ext) or config.DEFAULT_LANGUAGE
-    return bt.template('highlight', code=snippet.code, language=language)
+    codehl = highlight(snippet.code, language)
+    return bt.template('highlight.html', codehl=codehl)
 
 
 @bt.route('/raw/<snippet_id>', method='GET')

@@ -20,7 +20,7 @@ load_dotenv(options.config)  # will use a sensitive default if -c is omitted
 HOST = os.getenv('RTDBIN_HOST', 'localhost')
 PORT = int(os.getenv('RTDBIN_PORT', options.port))
 MAXSIZE = Byte(os.getenv('RTDBIN_MAXSIZE', '16kiB'))
-DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'plaintext')
+DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'text')
 DEFAULT_MAXUSAGE = int(os.getenv('RTDBIN_DEFAULT_MAXUSAGE', -1))
 DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', -1))
 REDIS_ENABLED = strtobool(os.getenv('REDIS_ENABLED', options.redis_enabled))

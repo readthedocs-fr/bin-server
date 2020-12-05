@@ -106,7 +106,7 @@ class TestController(unittest.TestCase):
         })
         th.start()
 
-        # Wait up to 2 second the server is ready
+        # Wait up to 2 second for the server to boot
         for i in range(10):
             th.join(.2)
             try:
@@ -117,13 +117,17 @@ class TestController(unittest.TestCase):
             else:
                 break
 
-    def setUp(self):
-        self.html_sanitizer = HTMLSanitizer(self)
         bottle.template = MagicMock()
         bottle.template.side_effect = bottle_template
 
-    def tearDown(self):
+    def tearDownClass(self):
         bottle.template = bottle_template
+
+    def setUp(self):
+        self.html_sanitizer = HTMLSanitizer(self)
+        bottle.template.reset_mock()
+
+    # =====
 
     def test_healthcheck(self):
         with urlreq.urlopen("http://localhost:8012/health") as res:
@@ -131,7 +135,8 @@ class TestController(unittest.TestCase):
 
     def test_get_new_form(self):
         with urlreq.urlopen("http://localhost:8012/") as res:
-            bottle.template.assert_called_with('newform.html')
+            self.assertTrue(bottle.template.called)
+            self.assertEqual(bottle.template.call_args.args, ('newform.html',))
             self.assertEqual(res.status, 200)
             self.html_sanitizer.feed(res.read().decode())
 
@@ -139,15 +144,16 @@ class TestController(unittest.TestCase):
         with patch('bin.models.Snippet') as MockSnippet:
             MockSnippet.get_by_id.return_value = snippet_lipsum
             with urlreq.urlopen("http://localhost:8012/lipsum") as res:
-                bottle.template.assert_called_with(
-                    'highlight', code=snippet_lipsum.code, language=config.DEFAULT_LANGUAGE)
+                self.assertTrue(bottle.template.called)
+                self.assertEqual(bottle.template.call_args.args, ('highlight.html',))
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
+            bottle.template.reset_mock()
             MockSnippet.get_by_id.return_value = snippet_python
             with urlreq.urlopen("http://localhost:8012/egg.py") as res:
-                bottle.template.assert_called_with(
-                    'highlight', code=snippet_python.code, language='python')
+                self.assertTrue(bottle.template.called)
+                self.assertEqual(bottle.template.call_args.args, ('highlight.html',))
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
@@ -155,11 +161,13 @@ class TestController(unittest.TestCase):
         with patch('bin.models.Snippet') as MockSnippet:
             MockSnippet.get_by_id.return_value = snippet_lipsum
             with urlreq.urlopen("http://localhost:8012/raw/lipsum") as res:
+                bottle.template.assert_not_called()
                 self.assertEqual(res.status, 200)
                 self.assertEqual(res.read().decode(), snippet_lipsum.code)
 
             MockSnippet.get_by_id.return_value = snippet_python
             with urlreq.urlopen("http://localhost:8012/raw/egg.py") as res:
+                bottle.template.assert_not_called()
                 self.assertEqual(res.status, 200)
                 self.assertEqual(res.read().decode(), snippet_python.code)
 

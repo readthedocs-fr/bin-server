@@ -2,16 +2,9 @@
 <html lang=fr>
     <head>
         % include('head.html')
-        <link rel=stylesheet href="/assets/styles/highlight/ocean.css">
-        <script src="/assets/scripts/highlight.min.js"></script>
-        <script src="/assets/scripts/cloc.js"></script>
-        <script>
-            const language = "{{language}}";
-            hljs.initHighlightingOnLoad();
-        </script>
+        <link rel=stylesheet href="/assets/styles/monokai.css">
     </head>
     <body>
-        <aside id="cloc">&gt;</aside>
-        <pre><code id="bin" class="language-{{language}}">{{code}}</code></pre>
+{{!codehl}}
     </body>
 </html>
