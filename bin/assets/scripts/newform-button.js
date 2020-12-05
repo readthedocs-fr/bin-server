@@ -19,12 +19,23 @@ code.addEventListener("input", () => {
   svg.classList.remove("valid");
 });
 
+function setCaretPos(pos) {
+  code.focus();
+  code.setSelectionRange(pos, pos);
+}
+
 window.addEventListener("keydown", (event) => {
   if (event.code === "Tab") {
-      const textarea = document.querySelector('textarea');
-      const pos = textarea.selectionStart;
-      const content = textarea.value;
+    // prevents tab from being used to navigate between browser elements
+    event.preventDefault();
 
-      textarea.value = content.substring(0, pos) + '\t' + content.substring(pos);
+    const pos = code.selectionStart;
+    const content = code.value;
+
+    // inserts tab at the position of the caret
+    code.value = content.substring(0, pos) + '\t' + content.substring(pos);
+
+    // puts caret after the newly inserted tab char
+    setCaretPos(pos + 1);
   }
 });
