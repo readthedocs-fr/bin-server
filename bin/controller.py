@@ -1,7 +1,7 @@
 import bottle as bt
 from pathlib import Path
 from bin import root, config, models
-from bin.utils import parse_language, parse_extension
+from bin.utils import parse_language, parse_extension, languages
 from bin.highlight import highlight
 
 
@@ -12,7 +12,7 @@ def healthcheck():
 
 @bt.route('/', method='GET')
 def get_new_form():
-    return bt.template('newform.html')
+    return bt.template('newform.html', languages=languages)
 
 
 @bt.route('/assets/<filepath:path>')

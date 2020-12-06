@@ -8,35 +8,10 @@
     <body>
         <form action="/new" method="POST" class="post-snippet">
             <textarea spellcheck="false" placeholder="Entrer votre code." name="code" autofocus></textarea>
-            <select name="lang">
-                <option value="txt">Plain text</option>
-                <option value="sh">Bash</option>
-                <option value="c">C</option>
-                <option value="cs">C#</option>
-                <option value="cpp">C++</option>
-                <option value="css">CSS</option>
-                <option value="diff">Diff</option>
-                <option value="go">Go</option>
-                <option value="html">HTML</option>
-                <option value="ini">Ini</option>
-                <option value="java">Java</option>
-                <option value="js">JavaScript</option>
-                <option value="json">JSON</option>
-                <option value="kt">Kotlin</option>
-                <option value="less">Less</option>
-                <option value="lua">Lua</option>
-                <option value="md">Markdown</option>
-                <option value="h">Objective C</option>
-                <option value="py">Python</option>
-                <option value="rb">Ruby</option>
-                <option value="rs">Rust</option>
-                <option value="scss">Sass</option>
-                <option value="sql">SQL</option>
-                <option value="swift">Swift</option>
-                <option value="toml">Toml</option>
-                <option value="ts">TypeScript</option>
-                <option value="xml">XML</option>
-                <option value="yml">Yaml</option>
+            <select name="lang" selected="txt">
+                % for ext, lang in languages:
+                <option value="{{ext}}">{{lang.title()}}</option>
+                % end
             </select>
 
             <button type=submit>
