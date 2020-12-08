@@ -1,8 +1,12 @@
 import bottle as bt
 from pathlib import Path
-from bin import root, config
-from bin.models import Snippet
+from bin import root, config, models
 from bin.utils import parse_language, parse_extension
+
+
+@bt.route('/health', method='GET')
+def healthcheck():
+    return "alive"
 
 
 @bt.route('/', method='GET')
@@ -46,7 +50,7 @@ def post_new():
     except ValueError as exc:
         raise bt.HTTPError(400, str(exc))
 
-    snippet = Snippet.create(code, max(maxusage, -1), lifetime)
+    snippet = models.Snippet.create(code, max(maxusage, -1), lifetime)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
@@ -54,10 +58,10 @@ def post_new():
 @bt.route('/<snippet_id>.<ext>', method='GET')
 def get_html(snippet_id, ext=None):
     try:
-        snippet = Snippet.get_by_id(snippet_id)
+        snippet = models.Snippet.get_by_id(snippet_id)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    language = parse_language(ext)
+    language = parse_language(ext) or config.DEFAULT_LANGUAGE
     return bt.template('highlight', code=snippet.code, language=language)
 
 
@@ -65,7 +69,7 @@ def get_html(snippet_id, ext=None):
 @bt.route('/raw/<snippet_id>.<ext>', method='GET')
 def get_raw(snippet_id, ext=None):
     try:
-        snippet = Snippet.get_by_id(snippet_id)
+        snippet = models.Snippet.get_by_id(snippet_id)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
     return snippet.code

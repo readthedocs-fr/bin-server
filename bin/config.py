@@ -14,7 +14,7 @@ cli = ArgumentParser()
 cli.add_argument('port', nargs='?', type=int, default=8012)
 cli.add_argument('-c', '--config')
 cli.add_argument('--no-redis', dest='redis_enabled', action='store_false')
-options = cli.parse_args()
+options = cli.parse_known_args()[0]
 load_dotenv(options.config)  # will use a sensitive default if -c is omitted
 
 HOST = os.getenv('RTDBIN_HOST', 'localhost')

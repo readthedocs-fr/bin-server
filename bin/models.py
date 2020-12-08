@@ -7,8 +7,6 @@ from bin import config
 
 if config.REDIS_ENABLED:
     database = Redis(host=config.REDIS_HOST, port=config.REDIS_PORT)
-else:
-    raise EnvironmentError("In-memory database is not supported for now")
 
 
 class Snippet:
