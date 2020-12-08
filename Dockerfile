@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 
 ENTRYPOINT python -m bin
 WORKDIR /usr/local/lib/rtd-bin
