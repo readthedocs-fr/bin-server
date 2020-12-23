@@ -1,4 +1,5 @@
 import bottle
+import re
 import signal
 import unittest
 import urllib.request as urlreq
@@ -6,25 +7,32 @@ from bin import config
 from bin.models import Snippet
 from bottle import template as bottle_template
 from html.parser import HTMLParser
+from textwrap import dedent
 from threading import Thread
 from unittest.mock import patch, MagicMock
 
 
 snippet_lipsum = Snippet(ident='lipsum', code="Lipsum", views_left=float('+inf'))
 snippet_python = Snippet(ident='egg', code='print("Hello world")', views_left=float('+inf'))
+snippet_htmlxss = Snippet(ident='htmlxss', code=dedent("""\
+    <DOCTYPE html>
+    <html>
+        <head>
+            <script>alert("XSS");</script>
+        </head>
+    </html>'"""), views_left=float('+inf'))
 
 
 class HTMLSanitizer(HTMLParser):
-    def __init__(self, assertEqual, assertIn):
-        self.assertIn = assertIn
-        self.assertEqual = assertEqual
+    def __init__(self, testcase):
+        self.testcase = testcase
         self.pairtags = {
             'a', 'abbr', 'acronym', 'address', 'applet', 'article',
             'aside', 'audio', 'b', 'basefont', 'bdi', 'bdo', 'big',
             'blockquote', 'body', 'button', 'canvas', 'caption',
             'center', 'cite', 'code', 'colgroup', 'data', 'datalist',
-            'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl', 'dt',
-            'em', 'fieldset', 'figcaption', 'figure', 'font',
+            'dd', 'del', 'details', 'dfn', 'dialog', 'dir', 'div', 'dl',
+            'doctype', 'dt', 'em', 'fieldset', 'figcaption', 'figure', 'font',
             'footer', 'form', 'frame', 'frameset', 'head', 'header', 'hgroup',
             'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'html', 'i', 'iframe',
             'ins', 'kbd', 'label', 'legend', 'li',
@@ -50,7 +58,7 @@ class HTMLSanitizer(HTMLParser):
         if self.stack and self.stack[-1] == 'svg':
             return
 
-        self.assertIn(starttag, self.pairtags | self.singletags, "unknown html tag")
+        self.testcase.assertIn(starttag, self.pairtags | self.singletags, "unknown html tag")
         if starttag in self.pairtags:
             self.stack.append(starttag)
 
@@ -58,14 +66,32 @@ class HTMLSanitizer(HTMLParser):
         if self.stack and self.stack[-1] == 'svg':
             return
 
-        self.assertIn(startendtag, self.singletags)
+        self.testcase.assertIn(startendtag, self.singletags)
 
     def handle_endtag(self, endtag):
         if self.stack[-1] == 'svg' and endtag != 'svg':
             return
 
         starttag = self.stack.pop()
-        self.assertEqual(starttag, endtag, "malformatted html")
+        self.testcase.assertEqual(starttag, endtag, "malformatted html")
+
+
+class HTMLPreCodeMatcher(HTMLSanitizer):
+    def __init__(self, testcase, automaton):
+        self.automaton = automaton
+        self.matched = False
+        super().__init__(testcase)
+
+    def handle_data(self, data):
+        if self.automaton.match(data):
+            self.matched = True
+            self.testcase.assertIn('pre', self.stack)
+            prei = self.stack.index('pre')
+            self.testcase.assertEqual(self.stack[prei + 1], 'code', "code must be enclosed in <pre><code>")
+
+    def feed(self, data):
+        super().feed(data)
+        self.testcase.assertTrue(self.matched, "not found")
 
 
 class TestController(unittest.TestCase):
@@ -92,7 +118,7 @@ class TestController(unittest.TestCase):
                 break
 
     def setUp(self):
-        self.html_sanitizer = HTMLSanitizer(self.assertEqual, self.assertIn)
+        self.html_sanitizer = HTMLSanitizer(self)
         bottle.template = MagicMock()
         bottle.template.side_effect = bottle_template
 
@@ -136,3 +162,17 @@ class TestController(unittest.TestCase):
             with urlreq.urlopen("http://localhost:8012/raw/egg.py") as res:
                 self.assertEqual(res.status, 200)
                 self.assertEqual(res.read().decode(), snippet_python.code)
+
+    def test_against_xss(self):
+        with patch('bin.models.Snippet') as MockSnippet:
+            MockSnippet.get_by_id.return_value = snippet_htmlxss
+            with urlreq.urlopen("http://localhost:8012/htmlxss") as res:
+                self.assertEqual(res.status, 200)
+                matcher = HTMLPreCodeMatcher(self, re.compile('.*alert.*', re.S))
+                matcher.feed(res.read().decode())
+
+            with urlreq.urlopen("http://localhost:8012/raw/htmlxss") as res:
+                self.assertEqual(res.status, 200)
+                self.assertIn('Content-Type', res.headers)
+                mimetype = res.headers['Content-Type'].partition(';')[0]
+                self.assertEqual(mimetype, 'text/plain')
