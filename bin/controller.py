@@ -72,4 +72,6 @@ def get_raw(snippet_id, ext=None):
         snippet = models.Snippet.get_by_id(snippet_id)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
+
+    bt.response.headers['Content-Type'] = 'text/plain'
     return snippet.code
