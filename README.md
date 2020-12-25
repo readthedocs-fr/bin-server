@@ -8,7 +8,7 @@ Pour installer *bin* à des fins d'**hébergement**, rendez vous sur la page des
 releases et télécharger la dernière version stable au format `.whl`. Il s'agit
 d'une archive *wheel* multi-plateforme pouvant être directement installée sur
 votre système. Les dépendances de l'archive seront installées automatiquement à
-l'exception de `metrics` qui doit être installée indépendement.
+l'exception de `metrics` qui doit être installée indépendamment.
 
 Note, les utilisateurs sur Windows doivent remplacer `python3` par `py`.
 
@@ -23,8 +23,8 @@ d'aide :
     python3 -m bin --help
 
 La configuration de l'application se fait soit via un fichier *dot-env* soit
-directement via les variables d'environments. Le format du fichier doit être
-comme suit: `NOM=valeur`, un nom par ligne, les lignes vides et les ligens
+directement via les variables d'environnement. Le format du fichier doit être
+comme suit: `NOM=valeur`, un nom par ligne, les lignes vides et les lignes
 commençant par un dièse (#) sont ignorées.
 
 La configuration par défaut de bin est :
@@ -47,8 +47,8 @@ commande `--config` :
 ## Contribuer
 
 Pour installer *bin* à des fins de **développement**, téléchargez la dernière
-branche `main` du repository github et installez le projet dans un environement
-virtuel dédié :
+branche `main` du repository github et installez le projet dans un
+environnement virtuel dédié :
 
     git clone https://github.com/readthedocs-fr/bin.git bin
     cd bin
@@ -75,13 +75,13 @@ rédaction des messages de commit au format suivant:
 
     type: titre sur 50 caractères max
 
-    Un paragraphe établissent le contexte de votre contribution, pour un
+    Un paragraphe établissant le contexte de votre contribution, pour un
     correctif de bug donner les étapes pour reproduire le bug. Il s'agit
-    ici d'expliquer POURQUOI votre contribution est un ajout utile..
+    ici d'expliquer POURQUOI votre contribution est un ajout utile.
 
     Un ou plusieurs paragraphes expliquant votre solution, les différentes
     pistes envisagées et les différentes décisions. Il s'agit ici d'expliquer
-    COMMENT vous avez résolu les objectifs/problèmes établis dans le 1e
+    COMMENT vous avez résolu les objectifs/problèmes établis dans le 1er
     paragraphe.
 
 Les différents `types`:
