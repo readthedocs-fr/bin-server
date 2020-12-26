@@ -1,10 +1,8 @@
 import bottle
 import html
 import re
-import signal
 import unittest
 import urllib.request as urlreq
-from bin import config
 from bin.models import Snippet
 from bottle import template as bottle_template
 from html.parser import HTMLParser
@@ -31,7 +29,7 @@ class HTMLSanitizer(HTMLParser):
             'h5', 'h6', 'html', 'i', 'iframe', 'ins', 'kbd', 'label', 'legend',
             'li', 'main', 'map', 'mark', 'menu', 'menuitem', 'meter', 'nav',
             'noframes', 'noscript', 'object', 'ol', 'output', 'p', 'picture',
-            'pre', 'progress','q', 'rp', 'rt', 'ruby', 's', 'samp', 'script',
+            'pre', 'progress', 'q', 'rp', 'rt', 'ruby', 's', 'samp', 'script',
             'section', 'select', 'small', 'span', 'strike', 'strong', 'style',
             'sub', 'summary', 'sup', 'svg', 'table', 'tbody', 'td', 'template',
             'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'tt',
