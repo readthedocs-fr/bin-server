@@ -1,31 +1,23 @@
-const code = document.getElementsByName("code")[0];
-const button = document.querySelector(".post-snippet button");
-const svg = button.querySelector("svg");
+const form = document.forms[0];
+const code = form.code;
+const button = form.getElementsByTagName('button')[0];
 
-button.addEventListener("click", (event) => {
+button.addEventListener('click', (event) => {
   if (!code.value) {
     event.preventDefault();
   }
 });
 
-code.addEventListener("input", () => {
+code.addEventListener('input', () => {
   if (code.value) {
-    button.classList.add("valid");
-    svg.classList.add("valid");
+    button.classList.add('valid');
     return;
   }
-
-  button.classList.remove("valid");
-  svg.classList.remove("valid");
+  button.classList.remove('valid');
 });
 
-function setCaretPos(pos) {
-  code.focus();
-  code.setSelectionRange(pos, pos);
-}
-
-window.addEventListener("keydown", (event) => {
-  if (event.code === "Tab") {
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'Tab') {
     // prevents tab from being used to navigate between browser elements
     event.preventDefault();
 
@@ -36,6 +28,8 @@ window.addEventListener("keydown", (event) => {
     code.value = content.substring(0, pos) + '\t' + content.substring(pos);
 
     // puts caret after the newly inserted tab char
-    setCaretPos(pos + 1);
+    const caretPos = pos + 1;
+    code.focus();
+    code.setSelectionRange(caretPos, caretPos);
   }
 });
