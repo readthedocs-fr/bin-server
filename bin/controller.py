@@ -1,5 +1,6 @@
 import bottle as bt
 from pathlib import Path
+from metrics import Time
 from bin import root, config, models
 from bin.utils import parse_language, parse_extension, languages
 from bin.highlight import highlight
@@ -12,7 +13,7 @@ def healthcheck():
 
 @bt.route('/', method='GET')
 def get_new_form():
-    return bt.template('newform.html', languages=languages)
+    return bt.template('newform.html', languages=languages, default_language=config.DEFAULT_LANGUAGE)
 
 
 @bt.route('/assets/<filepath:path>')
@@ -45,7 +46,7 @@ def post_new():
             code = forms.get('code', '').encode('latin-1') or code
             ext = parse_extension(forms.get('lang')) or ext
             maxusage = int(forms.get('maxusage') or maxusage)
-            lifetime = int(forms.get('lifetime') or lifetime)
+            lifetime = Time(forms.get('lifetime') or lifetime)
         if not code:
             raise ValueError("Code is missing")
     except ValueError as exc:
