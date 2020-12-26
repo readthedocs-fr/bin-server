@@ -2,7 +2,7 @@
 --extra-index-url=https://pypi.org/simple
 bottle==0.12.18
 genpw==1.0.0.post1
-metrics==1.0.1
-Pygments==2.7.2
+metrics==1.0.3
+Pygments==2.7.3
 python-dotenv==0.15.0
 redis==3.5.3
