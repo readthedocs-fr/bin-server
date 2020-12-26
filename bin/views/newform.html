@@ -2,24 +2,45 @@
 <html lang=fr>
     <head>
         % include('head.html')
-        <link rel=stylesheet href="/assets/styles/fullpage.css">
         <script src="/assets/scripts/newform-button.js" defer></script>
     </head>
     <body>
-        <form action="/new" method="POST" class="post-snippet">
-            <textarea spellcheck="false" placeholder="Entrer votre code." name="code" autofocus></textarea>
-            <select name="lang" selected="txt">
-                % for ext, lang in languages:
-                <option value="{{ext}}">{{lang.title()}}</option>
-                % end
-            </select>
+        <form action="/new" method=POST class="post-snippet">
+            <textarea spellcheck=false placeholder="Entrer votre code." name=code autofocus></textarea>
 
-            <button type=submit>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                  <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
-                </svg>
-            </button>
+            <div class="controls">
+                <input class="control" list=maxusage-presets type="number" min="-1" title="Nombre d'utilisation maximum : -1 ou 10, ect." placeholder="Nombre d'utilisation maximum : -1 ou 10, ect." name=maxusage>
+                <datalist id=maxusage-presets>
+                    <option value="-1">
+                    <option value="2">
+                    <option value="10">
+                    <option value="100">
+                </datalist>
+
+                <input pattern="-1|[0-9dhms]+" list=durations-preset placeholder="Expiration : -1 ou 1d1h1m1s" class="control" title="Expiration : -1 ou 1d1h1m1s" name=lifetime>
+                <datalist id=durations-preset>
+                    <option value="-1">
+                    <option value="7d">
+                    <option value="1d">
+                    <option value="6h">
+                    <option value="1h">
+                    <option value="10m">
+                </datalist>
+
+                <select class="control" title="Langage" name=lang>
+                    <option disabled>Langage</option>
+                    % for ext, lang in languages:
+                    <option value="{{ext}}"{{' selected' if lang == default_language else ''}}>{{lang.title()}}</option>
+                    % end
+                </select>
+
+                <button class="control" title="Soumettre" type=submit>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
         </form>
     </body>
 </html>
