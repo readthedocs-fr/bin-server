@@ -1,0 +1,44 @@
+name: Build artifacts
+
+# push & pr everywhere in order to test
+on: [push, pull_request]
+
+#  push:
+#    branches: [ main ]
+#  pull_request:
+#    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install wheel
+    
+    - name: Build tar.gz
+      run: python3 setup.py sdist
+    
+    - name: Build wheel
+      run: python3 setup.py bdist_wheel
+    
+    # TODO Get version code and use it here instead of hardcoding 0.0.0
+    - name: Upload tar.gz
+      uses: actions/upload-artifact@v2.2.1
+      with:
+        name: bin-archive
+        path: dist/bin-0.0.0.tar.gz
+
+    - name: Upload wheel
+      uses: actions/upload-artifact@v2.2.1
+      with:
+        name: bin-wheel
+        path: dist/bin-0.0.0-py3-none-any.whl
