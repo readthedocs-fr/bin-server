@@ -31,7 +31,7 @@ jobs:
       run: python3 setup.py bdist_wheel
       
     - name: Get version
-      run: echo $(cat VERSION) >> BIN_VERSION
+      run: echo "BIN_VERSION=$(cat VERSION)" >> $GITHUB_ENV
     
     - name: Upload tar.gz
       uses: actions/upload-artifact@v2.2.1
