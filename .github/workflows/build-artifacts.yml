@@ -9,7 +9,7 @@ on: [push, pull_request]
 #    branches: [ main ]
 
 jobs:
-  build:
+  build:    
     runs-on: ubuntu-latest
 
     steps:
@@ -29,16 +29,18 @@ jobs:
     
     - name: Build wheel
       run: python3 setup.py bdist_wheel
+      
+    - name: Get version
+      run: echo $(cat VERSION) >> BIN_VERSION
     
-    # TODO Get version code and use it here instead of hardcoding 0.0.0
     - name: Upload tar.gz
       uses: actions/upload-artifact@v2.2.1
       with:
         name: bin-archive
-        path: dist/bin-0.0.0.tar.gz
+        path: dist/bin-${{ env.BIN_VERSION }}.tar.gz
 
     - name: Upload wheel
       uses: actions/upload-artifact@v2.2.1
       with:
         name: bin-wheel
-        path: dist/bin-0.0.0-py3-none-any.whl
+        path: dist/bin-${{ env.BIN_VERSION }}-py3-none-any.whl
