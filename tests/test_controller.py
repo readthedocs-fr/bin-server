@@ -106,9 +106,9 @@ class HTMLPreCodeMatcher(HTMLSanitizer):
     def handle_data(self, data):
         if self.automaton.match(data):
             self.matched = True
-            self.testcase.assertIn('pre', self.stack)
-            prei = self.stack.index('pre')
-            self.testcase.assertEqual(self.stack[prei + 1], 'code', "code must be enclosed in <pre><code>")
+            self.testcase.assertIn('table', self.stack)
+            tablei = self.stack.index('table')
+            self.testcase.assertEqual(self.stack[tablei + 1], 'tbody', "code must be enclosed in <table><tbody>")
 
     def feed(self, data):
         super().feed(data)
