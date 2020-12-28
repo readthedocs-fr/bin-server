@@ -118,7 +118,7 @@ input[type="number"] {
     transition: all 0.2s ease;
 }
 
-.controls button.valid {
+.post-snippet:valid .controls button {
     background-color: #5cbbf7;
     cursor: pointer;
 }
@@ -131,6 +131,6 @@ input[type="number"] {
     transition: all 0.2s ease;
 }
 
-.controls button.valid svg {
+.post-snippet:valid .controls button svg {
     fill: #ffffff;
 }

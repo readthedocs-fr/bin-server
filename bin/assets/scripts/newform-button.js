@@ -1,22 +1,8 @@
-const form = document.forms[0];
-const code = form.code;
-const button = form.getElementsByTagName('button')[0];
+const code = document.forms[0].code;
 
-button.addEventListener('click', (event) => {
-  if (!code.value) {
-    event.preventDefault();
-  }
-});
-
-code.addEventListener('input', () => {
-  if (code.value) {
-    button.classList.add('valid');
-    return;
-  }
-  button.classList.remove('valid');
-});
-
-window.addEventListener('keydown', (event) => {
+// remove the "required" error message that overflows the page
+code.addEventListener('invalid', (event) => event.preventDefault());
+code.addEventListener('keydown', (event) => {
   if (event.code === 'Tab') {
     // prevents tab from being used to navigate between browser elements
     event.preventDefault();
