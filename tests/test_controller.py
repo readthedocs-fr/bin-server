@@ -1,4 +1,5 @@
 import bottle
+import html
 import re
 import signal
 import unittest
@@ -7,20 +8,13 @@ from bin import config
 from bin.models import Snippet
 from bottle import template as bottle_template
 from html.parser import HTMLParser
-from textwrap import dedent
 from threading import Thread
 from unittest.mock import patch, MagicMock
 
 
 snippet_lipsum = Snippet(ident='lipsum', code="Lipsum", views_left=float('+inf'))
 snippet_python = Snippet(ident='egg', code='print("Hello world")', views_left=float('+inf'))
-snippet_htmlxss = Snippet(ident='htmlxss', code=dedent("""\
-    <DOCTYPE html>
-    <html>
-        <head>
-            <script>alert("XSS");</script>
-        </head>
-    </html>'"""), views_left=float('+inf'))
+snippet_htmlxss = Snippet(ident='htmlxss', code='<script>alert("XSS");</script>', views_left=float('+inf'))
 
 
 class HTMLSanitizer(HTMLParser):
@@ -95,24 +89,6 @@ class HTMLSanitizer(HTMLParser):
 
         starttag = self.stack.pop()
         self.testcase.assertEqual(starttag, endtag, "malformatted html")
-
-
-class HTMLPreCodeMatcher(HTMLSanitizer):
-    def __init__(self, testcase, automaton):
-        self.automaton = automaton
-        self.matched = False
-        super().__init__(testcase)
-
-    def handle_data(self, data):
-        if self.automaton.match(data):
-            self.matched = True
-            self.testcase.assertIn('pre', self.stack)
-            prei = self.stack.index('pre')
-            self.testcase.assertEqual(self.stack[prei + 1], 'code', "code must be enclosed in <pre><code>")
-
-    def feed(self, data):
-        super().feed(data)
-        self.testcase.assertTrue(self.matched, "not found")
 
 
 class TestController(unittest.TestCase):
@@ -194,12 +170,25 @@ class TestController(unittest.TestCase):
                 self.assertEqual(res.read().decode(), snippet_python.code)
 
     def test_against_xss(self):
+        testcase = self
+
+        class HTMLParserXSS(HTMLParser):
+            def feed(self, data):
+                self.found = False
+                super().feed(data)
+                testcase.assertTrue(self.found)
+
+            def handle_data(self, data):
+                if "XSS" in data:
+                    self.found = True
+                    # ``data`` is unescaped by the calling method already
+                    testcase.assertEqual(data.strip(), snippet_htmlxss.code.strip())
+
         with patch('bin.models.Snippet') as MockSnippet:
             MockSnippet.get_by_id.return_value = snippet_htmlxss
             with urlreq.urlopen("http://localhost:8012/htmlxss") as res:
                 self.assertEqual(res.status, 200)
-                matcher = HTMLPreCodeMatcher(self, re.compile('.*alert.*', re.S))
-                matcher.feed(res.read().decode())
+                HTMLParserXSS().feed(res.read().decode())
 
             with urlreq.urlopen("http://localhost:8012/raw/htmlxss") as res:
                 self.assertEqual(res.status, 200)
