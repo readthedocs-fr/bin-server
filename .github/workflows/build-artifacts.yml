@@ -34,7 +34,7 @@ jobs:
     - name: Upload tar.gz
       uses: actions/upload-artifact@v2.2.1
       with:
-        name: bin-archive
+        name: bin-sources
         path: dist/bin-${{ env.BIN_VERSION }}.tar.gz
 
     - name: Upload wheel
