@@ -1,10 +1,8 @@
 name: Build artifacts
 
-# push & pr everywhere in order to test
-on: [push, pull_request]
-
-#  push:
-#    branches: [ main ]
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   build:    
