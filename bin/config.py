@@ -11,13 +11,15 @@ def strtobool(s):
     return s not in {False, "0", "false", "no"}
 
 cli = ArgumentParser()
-cli.add_argument('port', nargs='?', type=int, default=8012)
-cli.add_argument('-c', '--config')
+cli.add_argument('--rtdbin-port', metavar="PORT", type=int, default=8012,
+                 help="builtin server port")
+cli.add_argument('--rtdbin-config', metavar="PATH",
+                 help="dotenv config file")
 options = cli.parse_known_args()[0]
-load_dotenv(options.config)  # will use a sensitive default if -c is omitted
+load_dotenv(options.rtdbin_config)  # use a sensitive default when omitted
 
 HOST = os.getenv('RTDBIN_HOST', 'localhost')
-PORT = int(os.getenv('RTDBIN_PORT', options.port))
+PORT = int(os.getenv('RTDBIN_PORT', options.rtdbin_port))
 MAXSIZE = Byte(os.getenv('RTDBIN_MAXSIZE', '16kiB'))
 DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'text')
 DEFAULT_MAXUSAGE = int(os.getenv('RTDBIN_DEFAULT_MAXUSAGE', -1))
