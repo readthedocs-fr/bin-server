@@ -1,5 +1,3 @@
-import textwrap
-import itertools
 from redis import Redis
 from genpw import pronounceable_passwd
 from bin import config
