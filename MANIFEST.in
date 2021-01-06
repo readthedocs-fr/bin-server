@@ -1,0 +1,4 @@
+include VERSION
+graft bin/assets
+graft bin/views
+graft tests
