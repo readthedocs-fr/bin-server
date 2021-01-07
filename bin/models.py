@@ -35,6 +35,6 @@ class Snippet:
         elif views_left == 1:
             database.delete(snippet_id)
         else:
-            database.hincrby(snippet_id, 'views_left', 0)
+            database.hincrby(snippet_id, 'views_left', -1)
 
         return cls(snippet_id, code, views_left)
