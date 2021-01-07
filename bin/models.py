@@ -30,7 +30,7 @@ class Snippet:
 
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
-        if views_left == -1:
+        if views_left == 0:
             pass
         elif views_left == 1:
             database.delete(snippet_id)

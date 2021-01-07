@@ -52,7 +52,7 @@ def post_new():
     except ValueError as exc:
         raise bt.HTTPError(400, str(exc))
 
-    snippet = models.Snippet.create(code, max(maxusage, -1), lifetime)
+    snippet = models.Snippet.create(code, max(maxusage, 0), lifetime)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
