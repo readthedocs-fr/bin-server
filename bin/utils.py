@@ -8,7 +8,7 @@ languages = [
     ('ex', 'elixir'),
     ('go', 'go'),
     ('h', 'objectivec'),
-    ('hs', 'haskel'),
+    ('hs', 'haskell'),
     ('html', 'html'),
     ('ini', 'ini'),
     ('java', 'java'),
