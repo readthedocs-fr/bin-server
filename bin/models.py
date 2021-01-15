@@ -15,6 +15,8 @@ class Snippet:
     @classmethod
     def create(cls, code, maxusage, lifetime):
         ident = pronounceable_passwd(6)
+        while database.exists(ident):
+            ident = pronounceable_passwd(6)
         database.hset(ident, "code", code)
         database.hset(ident, "views_left", maxusage)
         if lifetime > 0:
