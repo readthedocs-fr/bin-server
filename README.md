@@ -12,9 +12,7 @@ l'exception de `metrics` qui doit être installée indépendamment.
 
 Note, les utilisateurs sur Windows doivent remplacer `python3` par `py`.
 
-    python3 -m pip install wheel
-    python3 -m pip install -i https://pypi.drlazor.be metrics
-    python3 -m pip install /chemin/vers/bin.whl
+    python3 -m pip install -i https://pypi.drlazor.be bin
 
 
 Assurez-vous que le service est correctement installé en affichant la page
@@ -40,9 +38,9 @@ La configuration par défaut de bin est :
 
 Vous pouvez changer cette configuration par défaut en créant votre propre
 fichier de configuration et en renseignant son chemin via l'option en ligne de
-commande `--config` :
+commande `--rtdbin-config` :
 
-    python3 -m bin --config /chemin/vers/.env
+    python3 -m bin --rtdbin-config /chemin/vers/.env
 
 ## Contribuer
 
@@ -65,6 +63,7 @@ Toutes les contributions doivent être faites sur une nouvelle branche (basée
 sur la dernière `main`). Si vous n'avez pas les droits d'accès au repo officiel
 assurez vous de pousser votre branche sur un fork.
 
+    git checkout -b votrebranche
     git remote add fork https://github.com/<votrecompte>/bin
     git push fork $(git branch --show-current)
 
