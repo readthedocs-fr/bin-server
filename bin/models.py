@@ -14,9 +14,12 @@ class Snippet:
 
     @classmethod
     def create(cls, code, maxusage, lifetime):
-        ident = pronounceable_passwd(6)
-        while database.exists(ident):
+        for _ in range(20):
             ident = pronounceable_passwd(6)
+            if not database.exists(ident):
+                break
+        else:
+            raise RuntimeError("No free identifier has been found after 20 attempts")
         database.hset(ident, "code", code)
         database.hset(ident, "views_left", maxusage)
         if lifetime > 0:
