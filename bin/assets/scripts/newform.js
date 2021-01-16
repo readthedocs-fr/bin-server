@@ -1,4 +1,5 @@
-const code = document.forms[0].code;
+const form = document.forms[0]
+const code = form.code;
 
 // remove the "required" error message that overflows the page
 code.addEventListener('invalid', (event) => event.preventDefault());
@@ -15,5 +16,10 @@ code.addEventListener('keydown', (event) => {
     const caretPos = selectionStart + 1;
     code.focus();
     code.setSelectionRange(caretPos, caretPos);
+  }
+  // ctrl+s triggers form submission
+  if (event.ctrlKey && event.keyCode === 83) {
+    event.preventDefault();
+    form.submit();
   }
 });
