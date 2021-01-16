@@ -35,6 +35,7 @@ La configuration par défaut de bin est :
     RTDBIN_DEFAULT_LIFETIME=0
     REDIS_HOST=localhost
     REDIS_PORT=6379
+    REDIS_DB=0
 
 Vous pouvez changer cette configuration par défaut en créant votre propre
 fichier de configuration et en renseignant son chemin via l'option en ligne de

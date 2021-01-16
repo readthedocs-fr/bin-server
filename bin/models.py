@@ -3,7 +3,11 @@ from genpw import pronounceable_passwd
 from bin import config
 
 
-database = Redis(host=config.REDIS_HOST, port=config.REDIS_PORT)
+database = Redis(
+    host=config.REDIS_HOST,
+    port=config.REDIS_PORT,
+    db=config.REDIS_DB
+)
 
 
 class Snippet:
