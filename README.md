@@ -60,6 +60,10 @@ lançant les tests unitaires :
 
     venv/bin/python -m unittest
 
+Lancer l'application de développement :
+
+    venv/bin/python -m bin
+
 Toutes les contributions doivent être faites sur une nouvelle branche (basée
 sur la dernière `main`). Si vous n'avez pas les droits d'accès au repo officiel
 assurez vous de pousser votre branche sur un fork.
