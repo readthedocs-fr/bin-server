@@ -13,7 +13,16 @@ def healthcheck():
 
 @bt.route('/', method='GET')
 def get_new_form():
-    return bt.template('newform.html', languages=languages, default_language=config.DEFAULT_LANGUAGE)
+    parentid = bt.request.query.parentid
+    lang = bt.request.query.lang or config.DEFAULT_LANGUAGE
+    code = models.Snippet.get_by_id(parentid).code if parentid else ""
+    return bt.template(
+        'newform.html',
+        languages=languages,
+        default_language=lang,
+        code=code,
+        parentid=parentid,
+    )
 
 
 @bt.route('/assets/<filepath:path>')
@@ -36,6 +45,7 @@ def post_new():
     ext = parse_extension(config.DEFAULT_LANGUAGE)
     maxusage = config.DEFAULT_MAXUSAGE
     lifetime = config.DEFAULT_LIFETIME
+    parentid = ''
 
     try:
         if files:
@@ -43,36 +53,54 @@ def post_new():
             code = part.file.read(config.MAXSIZE)
             ext = parse_extension(Path(part.filename).suffix.lstrip('.')) or ext
         if forms:
-            code = forms.get('code', '').encode('latin-1') or code
+            code = forms.get('code', '').encode('utf-8') or code
             ext = parse_extension(forms.get('lang')) or ext
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
+            parentid = forms.get('parentid', '')
+
         if not code:
             raise ValueError("Code is missing")
+        if maxusage < 0:
+            raise ValueError("Maximum usage must be positive")
+        if lifetime < 0:
+            raise ValueError("Lifetime must be positive")
+        if parentid:
+            try:
+                models.Snippet.get_by_id(parentid)
+            except KeyError:
+                raise ValueError("Parent does not exist")
     except ValueError as exc:
         raise bt.HTTPError(400, str(exc))
 
-    snippet = models.Snippet.create(code, max(maxusage, 0), lifetime)
+    snippet = models.Snippet.create(code, maxusage, lifetime, parentid)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
-@bt.route('/<snippet_id>', method='GET')
-@bt.route('/<snippet_id>.<ext>', method='GET')
-def get_html(snippet_id, ext=None):
+@bt.route('/<snippetid>', method='GET')
+@bt.route('/<snippetid>.<ext>', method='GET')
+def get_html(snippetid, ext=None):
     try:
-        snippet = models.Snippet.get_by_id(snippet_id)
+        snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    language = parse_language(ext) or config.DEFAULT_LANGUAGE
-    codehl = highlight(snippet.code, language)
-    return bt.template('highlight.html', codehl=codehl)
+    lang = parse_language(ext) or config.DEFAULT_LANGUAGE
+    codehl = highlight(snippet.code, lang)
+    return bt.template(
+        'highlight.html',
+        codehl=codehl,
+        lang=lang,
+        ext=ext,
+        snippetid=snippetid,
+        parentid=snippet.parentid,
+    )
 
 
-@bt.route('/raw/<snippet_id>', method='GET')
-@bt.route('/raw/<snippet_id>.<ext>', method='GET')
-def get_raw(snippet_id, ext=None):
+@bt.route('/raw/<snippetid>', method='GET')
+@bt.route('/raw/<snippetid>.<ext>', method='GET')
+def get_raw(snippetid, ext=None):
     try:
-        snippet = models.Snippet.get_by_id(snippet_id)
+        snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
 

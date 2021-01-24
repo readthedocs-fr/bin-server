@@ -2,11 +2,12 @@
 <html lang=fr>
     <head>
         % include('head.html')
-        <script src="/assets/scripts/newform-button.js" defer></script>
+        <script src="/assets/scripts/newform.js" defer></script>
     </head>
     <body>
-        <form action="/new" method=POST class="post-snippet">
-            <textarea spellcheck=false placeholder="Entrer votre code." name=code autofocus required></textarea>
+        <form action="/new" method=POST id=post-snippet>
+            <textarea spellcheck=false placeholder="Entrer votre code." name=code autofocus required>{{code}}</textarea>
+            <input type=hidden name=parentid value="{{parentid}}">
 
             <div class="controls">
                 <input class="control" list=maxusage-presets type="number" min="0" title="Nombre d'utilisation maximum : 0 ou 10, ect." placeholder="Nombre d'utilisation maximum : 0 ou 10, ect." name=maxusage>
@@ -30,14 +31,17 @@
                 <select class="control" title="Langage" name=lang>
                     <option disabled>Langage</option>
                     % for ext, lang in languages:
-                    <option value="{{ext}}"{{' selected' if lang == default_language else ''}}>{{lang.title()}}</option>
+                    % if lang == default_language:
+                        <option value="{{ext}}" selected>{{lang.title()}}</option>
+                    % else:
+                        <option value="{{ext}}">{{lang.title()}}</option>
+                    % end
                     % end
                 </select>
 
-                <button class="control" title="Soumettre" type=submit>
+                <button class="control" title="Enregistrer" type=submit>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                        <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
-                        <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                      <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
                     </svg>
                 </button>
             </div>
