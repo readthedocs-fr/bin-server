@@ -16,7 +16,7 @@ Par défaut, le service ne traite qu'un client à la fois, écoute à l'adresse 
 
 	$ python -m bin --rtdbin-config /chemin/vers/fichier/.env
 
-La configuration complète par défaut est reprise ci-dessous:
+La configuration complète par défaut est reprise ci-dessous :
 
     RTDBIN_HOST=localhost
     RTDBIN_PORT=8012
