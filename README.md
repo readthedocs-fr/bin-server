@@ -28,7 +28,7 @@ La configuration complète par défaut est reprise ci-dessous:
     REDIS_PORT=6379
     REDIS_DB=0
 
-Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibliothèque standard de python pour traiter les requêtes. Ce serveur est propice dans un environnement de développement ou lorsque le volume d'utilisateur est réduit. Pour de meilleurs performances [un serveur tiers compatible wsgi](https://wsgi.readthedocs.io/en/latest/servers.html) peut être utilisé à la place.
+Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibliothèque standard de Python pour traiter les requêtes. Ce serveur est propice dans un environnement de développement ou lorsque le volume d'utilisateur est réduit. Pour de meilleures performances, [un serveur tiers compatible wsgi](https://wsgi.readthedocs.io/en/latest/servers.html) peut être utilisé à la place.
 
 	$ pip install gunicorn
 	$ gunicorn bin:app
