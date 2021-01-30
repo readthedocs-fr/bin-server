@@ -12,7 +12,7 @@ Une fois installé, le module `bin` devient accessible et peut être directement
 
 	$ python -m bin
 
-Par défaut, le service ne traite qu'un client à la fois, écoute à l'adresse `localhost:8012` et se connecte à la base de donnée redis sur `localhost:6379/0`. Changer la configuration par défaut se fait au moyen d'un fichier `dotenv`. Le fichier sera automatiquement détecté s'il est nommé `.env` et qu'il se trouve soit au niveau des sources, soit au niveau du répertoire courant (celui depuis lequel est lancé la commande). Une alternative est de renseigner le fichier de configuration à utiliser via l'option `--rtdbin-config`.
+Par défaut, le service ne traite qu'un client à la fois, écoute à l'adresse `localhost:8012` et se connecte à la base de donnée Redis sur `localhost:6379/0`. Changer la configuration par défaut se fait au moyen d'un fichier `dotenv`. Le fichier sera automatiquement détecté s'il est nommé `.env` et qu'il se trouve soit au niveau des sources, soit au niveau du répertoire courant (celui depuis lequel est lancé la commande). Une alternative est de renseigner le fichier de configuration à utiliser via l'option `--rtdbin-config`.
 
 	$ python -m bin --rtdbin-config /chemin/vers/fichier/.env
 
