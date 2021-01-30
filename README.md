@@ -67,6 +67,6 @@ Les contributions se font sur des branches dédiées, les branches sont nommées
 	page in github.
 	
 	The document is very important yet the current one is not very
-	good. The new documents is more straigth to the point.
+	good. The new documents are more straight to the point.
 	EOF
 	$ git push fork redo-readme-juc
