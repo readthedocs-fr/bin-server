@@ -54,7 +54,7 @@ Une fois installé, vous pouvez vous assurer que le système est correctement op
 	$ curl http://localhost:8012/health
 	$ kill %%
 
-Les contributions se font sur des branches dédiés, les branches sont nommées en commençant par quelques mots clés suivi d'un identifiant de l'utilisateur. Les commits sont le plus petit dénominateur de version, sont correctement documenté au moyen d'un message de commit reprenant au minimum un contexte expliquant la nécessité des modifications.
+Les contributions se font sur des branches dédiées, les branches sont nommées en commençant par quelques mots-clés suivis d'un identifiant de l'utilisateur. Les commits sont le plus petit dénominateur de version, sont correctement documentés au moyen d'un message de commit reprenant au minimum un contexte expliquant la nécessité des modifications.
 
 	$ git checkout main
 	$ git pull origin main
