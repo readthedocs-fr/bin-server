@@ -4,7 +4,7 @@ Un outil pour héberger des snippets de code et les partager via une URL.
 
 ## Installation
 
-Le service nécessite une version de python supérieure ou égale à Python 3.7 et un accès à un serveur redis. Les archives du service sont hébergés sur l'index de paquet personnel de Dr Lazor et sont directement accessibles au moyen de `pip`.
+Le service nécessite une version de Python supérieure ou égale à Python 3.7 et un accès à un serveur Redis. Les archives du service sont hébergées sur l'index de paquet personnel de Dr Lazor et sont directement accessibles au moyen de `pip`.
 
 	$ pip install -i https://bin.drlazor.be bin
 
