@@ -2,30 +2,21 @@
 
 Un outil pour héberger des snippets de code et les partager via une URL.
 
-## Installer
+## Installation
 
-Pour installer *bin* à des fins d'**hébergement**, rendez vous sur la page des
-releases et télécharger la dernière version stable au format `.whl`. Il s'agit
-d'une archive *wheel* multi-plateforme pouvant être directement installée sur
-votre système. Les dépendances de l'archive seront installées automatiquement à
-l'exception de `metrics` qui doit être installée indépendamment.
+Le service nécessite une version de Python supérieure ou égale à Python 3.7 et un accès à un serveur Redis. Les archives du service sont hébergées sur l'index de paquet personnel de Dr Lazor et sont directement accessibles au moyen de `pip`.
 
-Note, les utilisateurs sur Windows doivent remplacer `python3` par `py`.
+	$ pip install -i https://bin.drlazor.be bin
 
-    python3 -m pip install -i https://pypi.drlazor.be bin
+Une fois installé, le module `bin` devient accessible et peut être directement lancé via la ligne de commande.
 
+	$ python -m bin
 
-Assurez-vous que le service est correctement installé en affichant la page
-d'aide :
+Par défaut, le service ne traite qu'un client à la fois, écoute à l'adresse `localhost:8012` et se connecte à la base de donnée Redis sur `localhost:6379/0`. Changer la configuration par défaut se fait au moyen d'un fichier `dotenv`. Le fichier sera automatiquement détecté s'il est nommé `.env` et qu'il se trouve soit au niveau des sources, soit au niveau du répertoire courant (celui depuis lequel est lancé la commande). Une alternative est de renseigner le fichier de configuration à utiliser via l'option `--rtdbin-config`.
 
-    python3 -m bin --help
+	$ python -m bin --rtdbin-config /chemin/vers/fichier/.env
 
-La configuration de l'application se fait soit via un fichier *dot-env* soit
-directement via les variables d'environnement. Le format du fichier doit être
-comme suit: `NOM=valeur`, un nom par ligne, les lignes vides et les lignes
-commençant par un dièse (#) sont ignorées.
-
-La configuration par défaut de bin est :
+La configuration complète par défaut est reprise ci-dessous :
 
     RTDBIN_HOST=localhost
     RTDBIN_PORT=8012
@@ -37,57 +28,45 @@ La configuration par défaut de bin est :
     REDIS_PORT=6379
     REDIS_DB=0
 
-Vous pouvez changer cette configuration par défaut en créant votre propre
-fichier de configuration et en renseignant son chemin via l'option en ligne de
-commande `--rtdbin-config` :
+Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibliothèque standard de Python pour traiter les requêtes. Ce serveur est propice dans un environnement de développement ou lorsque le volume d'utilisateur est réduit. Pour de meilleures performances, [un serveur tiers compatible wsgi](https://wsgi.readthedocs.io/en/latest/servers.html) peut être utilisé à la place.
 
-    python3 -m bin --rtdbin-config /chemin/vers/.env
+	$ pip install gunicorn
+	$ gunicorn bin:app
 
-## Contribuer
+Des fichiers de configuration d'exemples pour `nginx`, `systemd` et `gunicorn` sont disponibles dans le [wiki](https://github.com/readthedocs-fr/bin/wiki/systemd-nginx-gunicorn).
 
-Pour installer *bin* à des fins de **développement**, téléchargez la dernière
-branche `main` du repository github et installez le projet dans un
-environnement virtuel dédié :
+## Contribution
 
-    git clone https://github.com/readthedocs-fr/bin.git bin
-    cd bin
-    python3 -m venv venv
-    venv/bin/pip install -r requirements.txt
-    venv/bin/pip install -e .
+Le développement de `bin` se fait principalement via la communauté Discord **Read The Docs** dans le canal [#discussions-orga](https://discord.gg/FECbXpmj7m).
 
-Assurez-vous que le service est correctement installé et est fonctionnel en
-lançant les tests unitaires :
+Les sources peuvent être récupérées via Git et le service peut être installé dans un environnement virtuel dédié.
 
-    venv/bin/python -m unittest
+	$ git clone https://github.com/Readthedocs/bin.git rtdbin
+	$ cd rtdbin
+	$ python -m venv
+	$ venv/bin/pip install -r requirements.txt
+	$ venv/bin/pip install -e .
 
-Toutes les contributions doivent être faites sur une nouvelle branche (basée
-sur la dernière `main`). Si vous n'avez pas les droits d'accès au repo officiel
-assurez vous de pousser votre branche sur un fork.
+Une fois installé, vous pouvez vous assurer que le système est correctement opérationnel en lançant la suite de tests unitaires et en vérifiant que le serveur démarre correctement.
 
-    git checkout -b votrebranche
-    git remote add fork https://github.com/<votrecompte>/bin
-    git push fork $(git branch --show-current)
+	$ venv/bin/python -m unittest
+	$ venv/bin/python -m bin &
+	$ curl http://localhost:8012/health
+	$ kill %%
 
-Chacun de vos ajouts doit être accompagné d'un message de commit exhaustif,
-nous recommandons de prendre du temps à leur rédaction vu qu'il s'agit là de la
-principale source de documentation technique. En ce sens, nous privilégions la
-rédaction des messages de commit au format suivant:
+Les contributions se font sur des branches dédiées, les branches sont nommées en commençant par quelques mots-clés suivis d'un identifiant de l'utilisateur. Les commits sont le plus petit dénominateur de version, sont correctement documentés au moyen d'un message de commit reprenant au minimum un contexte expliquant la nécessité des modifications.
 
-    type: titre sur 50 caractères max
-
-    Un paragraphe établissant le contexte de votre contribution, pour un
-    correctif de bug donner les étapes pour reproduire le bug. Il s'agit
-    ici d'expliquer POURQUOI votre contribution est un ajout utile.
-
-    Un ou plusieurs paragraphes expliquant votre solution, les différentes
-    pistes envisagées et les différentes décisions. Il s'agit ici d'expliquer
-    COMMENT vous avez résolu les objectifs/problèmes établis dans le 1er
-    paragraphe.
-
-Les différents `types`:
-
-* `imp`, improvement, amélioration d'une fonctionnalité existante
-* `ref`, refactor, ré-implémentation conséquente d'une fonctionnalité
-* `add`, add, ajout d'une nouvelle fonctionnalité
-* `doc`, documentation, ajout/correction relatif à la documentation
-* `fix`, fix, correctif de bug
+	$ git checkout main
+	$ git pull origin main
+	$ git checkout -b redo-readme-juc
+	$ git commit <<EOF
+	doc: redo readme
+	
+	The readme is the first document users read when they learn
+	about the project, the file is by default shown in the project root
+	page in github.
+	
+	The document is very important yet the current one is not very
+	good. The new documents are more straight to the point.
+	EOF
+	$ git push fork redo-readme-juc
