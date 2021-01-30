@@ -39,7 +39,7 @@ Des fichiers de configuration d'exemples pour `nginx`, `systemd` et `gunicorn` s
 
 Le développement de `bin` se fait principalement via la communauté Discord **Read The Docs** dans le canal [#discussions-orga](https://discord.gg/FECbXpmj7m).
 
-Les sources peuvent être récupérer via git et le service peut être installé dans un environnement virtuel dédié.
+Les sources peuvent être récupérées via Git et le service peut être installé dans un environnement virtuel dédié.
 
 	$ git clone https://github.com/Readthedocs/bin.git rtdbin
 	$ cd rtdbin
