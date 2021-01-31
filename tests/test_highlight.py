@@ -1,6 +1,6 @@
 import unittest
 import pygments
-from bin import utils
+from bin import highlight
 
 class TestHighlight(unittest.TestCase):
     @staticmethod
@@ -12,5 +12,5 @@ class TestHighlight(unittest.TestCase):
             return False
 
     def test_languages_has_formatter(self):
-        for lang in utils.languages:
+        for lang in highlight.languages:
             self.assertTrue(self.has_language_formatter(lang[1]))
