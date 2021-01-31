@@ -11,39 +11,42 @@ database = Redis(
 
 
 class Snippet:
-    def __init__(self, ident, code, views_left):
+    def __init__(self, ident, code, views_left, parentid):
         self.id = ident
         self.code = code
         self.views_left = views_left
+        self.parentid = parentid
 
     @classmethod
-    def create(cls, code, maxusage, lifetime):
+    def create(cls, code, maxusage, lifetime, parentid):
         for _ in range(20):
-            ident = pronounceable_passwd(6)
+            ident = pronounceable_passwd(config.IDENTSIZE)
             if not database.exists(ident):
                 break
         else:
             raise RuntimeError("No free identifier has been found after 20 attempts")
-        database.hset(ident, "code", code)
-        database.hset(ident, "views_left", maxusage)
+        database.hset(ident, b'code', code)
+        database.hset(ident, b'views_left', maxusage)
+        database.hset(ident, b'parentid', parentid)
         if lifetime > 0:
             database.expire(ident, int(lifetime))
-        return cls(ident, code, maxusage)
+        return cls(ident, code, maxusage, parentid)
 
     @classmethod
-    def get_by_id(cls, snippet_id):
-        snippet = database.hgetall(snippet_id)
+    def get_by_id(cls, ident):
+        snippet = database.hgetall(ident)
 
         if not snippet:
             raise KeyError('Snippet not found')
 
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
+        parentid = snippet[b'parentid'].decode('ascii')
         if views_left == 0:
             pass
         elif views_left == 1:
-            database.delete(snippet_id)
+            database.delete(ident)
         else:
-            database.hincrby(snippet_id, 'views_left', -1)
+            database.hincrby(ident, 'views_left', -1)
 
-        return cls(snippet_id, code, views_left)
+        return cls(ident, code, views_left, parentid)

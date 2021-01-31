@@ -60,13 +60,13 @@ tr, td {
     content: attr(value);
 }
 
-.post-snippet {
+#post-snippet {
     padding: 0.3em 0 0.3em 0.6em;
     width: 100%;
     height: 100%;
 }
 
-.post-snippet textarea {
+#post-snippet textarea {
     background-color: transparent;
     border: none;
     resize: none;
@@ -115,26 +115,34 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-.controls button {
+.controls button, .controls a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background-color: #5cbbf7;
+    cursor: pointer;
     border-radius: 50%;
     height: 4em;
     width: 4em;
-    transition: all 0.2s ease;
+    font: caption;
+    font-size: 0.85em;
+
+    transition: background-color 0.2s ease;
 }
 
-.post-snippet:valid .controls button {
-    background-color: #5cbbf7;
-    cursor: pointer;
-}
-
-.controls button svg {
-    fill: #707070;
-    height: 1.25em;
-    width: 1.25em;
-
-    transition: all 0.2s ease;
-}
-
-.post-snippet:valid .controls button svg {
+.controls button svg, .controls a svg {
     fill: #ffffff;
+    height: 1.75em;
+    width: 1.75em;
+    transition: background-color 0.2s ease;
+}
+
+#post-snippet:invalid .controls button {
+    background-color: #1d2529;
+    cursor: default;
+}
+
+#post-snippet:invalid .controls button svg {
+    fill: #707070;
 }

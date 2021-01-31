@@ -21,6 +21,7 @@ load_dotenv(options.rtdbin_config)  # use a sensitive default when omitted
 HOST = os.getenv('RTDBIN_HOST', 'localhost')
 PORT = int(os.getenv('RTDBIN_PORT', options.rtdbin_port))
 MAXSIZE = Byte(os.getenv('RTDBIN_MAXSIZE', '16kiB'))
+IDENTSIZE = int(os.getenv('RTDBIN_IDENTSIZE', 6))
 DEFAULT_LANGUAGE = os.getenv('RTDBIN_DEFAULT_LANGUAGE', 'text')
 DEFAULT_MAXUSAGE = int(os.getenv('RTDBIN_DEFAULT_MAXUSAGE', 0))
 DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', 0))

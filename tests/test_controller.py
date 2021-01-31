@@ -10,9 +10,12 @@ from threading import Thread
 from unittest.mock import patch, MagicMock
 
 
-snippet_lipsum = Snippet(ident='lipsum', code="Lipsum", views_left=float('+inf'))
-snippet_python = Snippet(ident='egg', code='print("Hello world")', views_left=float('+inf'))
-snippet_htmlxss = Snippet(ident='htmlxss', code='<script>alert("XSS");</script>', views_left=float('+inf'))
+def make_snippet(ident, code):
+    return Snippet(ident=ident, code=code, views_left=float('+inf'), parentid='')
+
+snippet_lipsum = make_snippet('lipsum', code="Lorem ipsum dolor sit amet")
+snippet_python = make_snippet('egg', code='print("Hello world")')
+snippet_htmlxss = make_snippet('htmlxss', code='<script>alert("XSS");</script>')
 
 
 class HTMLSanitizer(HTMLParser):
