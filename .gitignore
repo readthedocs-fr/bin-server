@@ -132,3 +132,8 @@ dmypy.json
 
 # Redis
 dump.rdb
+
+# Dotfiles
+.*
+!.gitignore
+!.readthedocs.yml

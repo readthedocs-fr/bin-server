@@ -5,6 +5,5 @@ bottle.TEMPLATE_PATH = [str(root / 'views')]
 app = application = bottle.default_app()
 
 from . import config
-from . import utils
 from . import controller
 from . import models
