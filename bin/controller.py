@@ -1,3 +1,8 @@
+""" HTTP interface and processing
+
+Various HTTP routes the external world uses to communicate with the application.
+"""
+
 import bottle as bt
 from pathlib import Path
 from metrics import Time
@@ -7,11 +12,18 @@ from bin.highlight import highlight, parse_language, parse_extension, languages
 
 @bt.route('/health', method='GET')
 def healthcheck():
+    """ Get a dummy string 'alive' to ensure the server is responding """
     return "alive"
 
 
 @bt.route('/', method='GET')
 def get_new_form():
+    """
+    Get the browser-friendly html form to easily post a new snippet
+
+    :param lang: (query) optional lang that is selected in the lang selection instead of the configured default
+    :param parentid: (query) optional 'parent' snippet to duplicate the code from
+    """
     parentid = bt.request.query.parentid
     lang = bt.request.query.lang or config.DEFAULT_LANGUAGE
     code = models.Snippet.get_by_id(parentid).code if parentid else ""
@@ -26,11 +38,32 @@ def get_new_form():
 
 @bt.route('/assets/<filepath:path>')
 def assets(filepath):
+    """
+    Get a static css/js/media file that is stored in the filesystem.
+
+    This route exists for developers of bin who wish to run the service
+    with minimum system requirements. In production, we suggest you use
+    a web server to deliver the static content.
+    """
     return bt.static_file(filepath, root=root.joinpath('assets'))
 
 
 @bt.route('/new', method='POST')
 def post_new():
+    """
+    Post a new snippet and redirect the user to the generated unique URL
+    for the snippet.
+
+    :param code: (form) required snippet text, can alternativaly be sent as a Multi-Part utf-8 file
+    :param lang: (form) optionnal language
+    :param maxusage: (form) optionnal maximum download of the snippet before it is deleted
+    :param lifetime: (form) optionnal time (defined in seconds) the snippet is keep in the database before it is deleted
+    :param parentid: (form) optionnal snippet id this new snippet is a duplicate of
+
+    :raises HTTPError: code 411 when the ``Content-Length`` http header is missing
+    :raises HTTPError: code 413 when the http request is too large (mostly because the snippet is too long)
+    :raises HTTPError: code 400 with a sensible status when the form processing fails
+    """
     content_length = bt.request.get_header('Content-Length')
     if content_length is None:
         raise bt.HTTPError(411, "Content-Length required")
@@ -79,6 +112,14 @@ def post_new():
 @bt.route('/<snippetid>', method='GET')
 @bt.route('/<snippetid>.<ext>', method='GET')
 def get_html(snippetid, ext=None):
+    """
+    Get a snippet in a beautiful html page
+
+    :param snippetid: (path) required snippet id
+    :param ext: (path) optional language file extension, used to determine the highlight backend
+
+    :raises HTTPError: code 404 when the snippet is not found
+    """
     try:
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
@@ -98,6 +139,12 @@ def get_html(snippetid, ext=None):
 @bt.route('/raw/<snippetid>', method='GET')
 @bt.route('/raw/<snippetid>.<ext>', method='GET')
 def get_raw(snippetid, ext=None):
+    """
+    Get a snippet in plain text without code hightlight
+
+    :param snippetid: (path) required snippet id
+    :param ext: (path) ignored parameter
+    """
     try:
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:

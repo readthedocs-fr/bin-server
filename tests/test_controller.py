@@ -104,7 +104,7 @@ class TestController(unittest.TestCase):
         })
         th.start()
 
-        # Wait up to 5 second for the server to boot
+        # Wait up to 5 seconds for the server to boot
         for i in range(10):
             th.join(.5)
             try:

@@ -1,8 +1,12 @@
+""" Mapping between python objets and the Redis store """
+
+
 from redis import Redis
 from genpw import pronounceable_passwd
 from bin import config
 
 
+# We always connect to Redis
 database = Redis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
@@ -11,14 +15,27 @@ database = Redis(
 
 
 class Snippet:
+    """
+    A snippet is a immuable text that have been saved in the database
+    and that is retrivable via an unique URL.
+    """
+
     def __init__(self, ident, code, views_left, parentid):
-        self.id = ident
-        self.code = code
-        self.views_left = views_left
-        self.parentid = parentid
+        self.id = ident  #: snippet unique identifier
+        self.code = code  #: snippet text
+        self.views_left = views_left  #: how many time this snippet can be retrieved again
+        self.parentid = parentid  #: the original snippet this one is a duplicate of or an empty string
 
     @classmethod
     def create(cls, code, maxusage, lifetime, parentid):
+        """
+        Save a snippet in the database and return a snippet object
+
+        :param code: the source code utf-8 encoded
+        :param maxusage: how many times this snippet can be retrieve before self-deletion
+        :param lifetime: how long the snippet is saved before self-deletion
+        :param parentid: the original snippet id this new snippet is a duplicate of, empty string for original snippet
+        """
         for _ in range(20):
             ident = pronounceable_passwd(config.IDENTSIZE)
             if not database.exists(ident):
@@ -34,6 +51,12 @@ class Snippet:
 
     @classmethod
     def get_by_id(cls, ident):
+        """
+        Retrieve a snippet from the database and return a snippet object
+
+        :param ident: the snippet identifier
+        :raises KeyError: the snippet does not exist or have been removed
+        """
         snippet = database.hgetall(ident)
 
         if not snippet:

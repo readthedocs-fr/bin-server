@@ -1,3 +1,6 @@
+""" HTML highlighted code export and language tools """
+
+
 import pygments
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
@@ -46,6 +49,7 @@ langtoext = {language: ext for ext, language in languages}
 
 
 def parse_extension(lang_or_ext):
+    """ From a language name or a language extension, get a language """
     lang_or_ext = (lang_or_ext or '').casefold()
     if lang_or_ext in exttolang:
         return lang_or_ext
@@ -53,6 +57,7 @@ def parse_extension(lang_or_ext):
 
 
 def parse_language(lang_or_ext):
+    """ From a language name or a language extension, get an extension """
     lang_or_ext = (lang_or_ext or '').casefold()
     if lang_or_ext in langtoext:
         return lang_or_ext
@@ -60,7 +65,11 @@ def parse_language(lang_or_ext):
 
 
 
-class TableHtmlFormatter(HtmlFormatter):
+class _TableHtmlFormatter(HtmlFormatter):
+    """
+    Extension to the default pygment HtmlFormatter to control the html
+    skeleton output, class names and line numbering.
+    """
     def __init__(self, **options):
         super().__init__(**options)
         if options.get('linenos', False) == 'bin-table':
@@ -78,9 +87,10 @@ class TableHtmlFormatter(HtmlFormatter):
         yield 0, '</tbody></table>'
 
 
-_html_formatter = TableHtmlFormatter(linenos='bin-table', style='monokai')
+_html_formatter = _TableHtmlFormatter(linenos='bin-table', style='monokai')
 
 
 def highlight(code, language):
+    """ Pretty html export of ``code`` using syntax highlighting """
     lexer = get_lexer_by_name(language)
     return pygments.highlight(code, lexer, _html_formatter)

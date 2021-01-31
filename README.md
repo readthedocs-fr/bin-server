@@ -1,4 +1,4 @@
-# bin
+# bin-server
 
 Un outil pour héberger des snippets de code et les partager via une URL.
 
