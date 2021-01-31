@@ -2,8 +2,7 @@ import bottle as bt
 from pathlib import Path
 from metrics import Time
 from bin import root, config, models
-from bin.utils import parse_language, parse_extension, languages
-from bin.highlight import highlight
+from bin.highlight import highlight, parse_language, parse_extension, languages
 
 
 @bt.route('/health', method='GET')

@@ -104,9 +104,9 @@ class TestController(unittest.TestCase):
         })
         th.start()
 
-        # Wait up to 2 second for the server to boot
+        # Wait up to 5 second for the server to boot
         for i in range(10):
-            th.join(.2)
+            th.join(.5)
             try:
                 urlreq.urlopen("http://localhost:8012/health")
             except ConnectionRefusedError:
@@ -134,8 +134,7 @@ class TestController(unittest.TestCase):
 
     def test_get_new_form(self):
         with urlreq.urlopen("http://localhost:8012/") as res:
-            self.assertTrue(bottle.template.called)
-            self.assertEqual(bottle.template.call_args.args, ('newform.html',))
+            bottle.template.assert_called_once()
             self.assertEqual(res.status, 200)
             self.html_sanitizer.feed(res.read().decode())
 
@@ -143,16 +142,14 @@ class TestController(unittest.TestCase):
         with patch('bin.models.Snippet') as MockSnippet:
             MockSnippet.get_by_id.return_value = snippet_lipsum
             with urlreq.urlopen("http://localhost:8012/lipsum") as res:
-                self.assertTrue(bottle.template.called)
-                self.assertEqual(bottle.template.call_args.args, ('highlight.html',))
+                bottle.template.assert_called_once()
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
             bottle.template.reset_mock()
             MockSnippet.get_by_id.return_value = snippet_python
             with urlreq.urlopen("http://localhost:8012/egg.py") as res:
-                self.assertTrue(bottle.template.called)
-                self.assertEqual(bottle.template.call_args.args, ('highlight.html',))
+                bottle.template.assert_called_once()
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
