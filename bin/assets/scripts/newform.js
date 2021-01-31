@@ -1,4 +1,4 @@
-const form = document.forms[0]
+const form = document.forms[0];
 const code = form.code;
 
 // remove the "required" error message that overflows the page
@@ -16,9 +16,8 @@ code.addEventListener('keydown', (event) => {
     const caretPos = selectionStart + 1;
     code.focus();
     code.setSelectionRange(caretPos, caretPos);
-  }
-  // ctrl+s triggers form submission
-  if (event.ctrlKey && event.keyCode === 83) {
+  } else if (event.code === 'KeyS' && (e.ctrlKey || e.metaKey) && form.checkValidity()) {
+    // ctrl+s triggers form submission
     event.preventDefault();
     form.submit();
   }
