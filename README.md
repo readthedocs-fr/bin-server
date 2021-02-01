@@ -41,7 +41,7 @@ Le développement de `bin` se fait principalement via la communauté Discord **R
 
 Les sources peuvent être récupérées via Git et le service peut être installé dans un environnement virtuel dédié.
 
-	$ git clone https://github.com/Readthedocs/bin.git rtdbin
+	$ git clone https://github.com/readthedocs-fr/bin.git rtdbin
 	$ cd rtdbin
 	$ python -m venv
 	$ venv/bin/pip install -r requirements.txt
