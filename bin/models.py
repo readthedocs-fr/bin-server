@@ -1,7 +1,7 @@
 from redis import Redis
 from genpw import pronounceable_passwd
-from bin import config
-
+from bin import config, txtparser
+from bottle import request
 
 database = Redis(
     host=config.REDIS_HOST,
@@ -9,6 +9,7 @@ database = Redis(
     db=config.REDIS_DB
 )
 
+whitelisted_views = txtparser.TxtParser('view_whitelist.txt').parse_file()
 
 class Snippet:
     def __init__(self, ident, code, views_left, parentid):
@@ -42,7 +43,8 @@ class Snippet:
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
         parentid = snippet[b'parentid'].decode('ascii')
-        if views_left == 0:
+        client_ip = request.environ.get('HTTP_X_FORWARDED_FOR') or request.environ.get('REMOTE_ADDR')
+        if views_left == 0 or client_ip in whitelisted_views:
             pass
         elif views_left == 1:
             database.delete(ident)
