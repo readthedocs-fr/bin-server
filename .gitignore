@@ -130,5 +130,10 @@ dmypy.json
 .floo
 .flooignore
 
+# -----------
+
 # Redis
 dump.rdb
+
+# Views whitelisted IPs
+view_whitelist.txt

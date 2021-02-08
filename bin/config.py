@@ -11,6 +11,12 @@ def strtobool(s):
         pass
     return s not in {False, "0", "false", "no"}
 
+def get_whitelisted_views():
+    try:
+        return txtparser.parse_file('view_whitelist.txt')
+    except FileNotFoundError:
+        return list()
+
 cli = ArgumentParser()
 cli.add_argument('--rtdbin-port', metavar="PORT", type=int, default=8012,
                  help="builtin server port")
@@ -29,4 +35,4 @@ DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', 0))
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DB = int(os.getenv('REDIS_DB', 0))
-WHITELISTED_VIEWS = txtparser.parse_file('view_whitelist.txt')
+WHITELISTED_VIEWS = get_whitelisted_views()
