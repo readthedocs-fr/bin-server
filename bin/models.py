@@ -1,7 +1,7 @@
 from redis import Redis
 from genpw import pronounceable_passwd
 from bin import config
-from bottle import request
+import bottle as bt
 
 database = Redis(
     host=config.REDIS_HOST,
@@ -41,7 +41,7 @@ class Snippet:
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
         parentid = snippet[b'parentid'].decode('ascii')
-        client_ip = request.environ.get('HTTP_X_FORWARDED_FOR') or request.environ.get('REMOTE_ADDR')
+        client_ip = bt.request.environ.get('HTTP_X_FORWARDED_FOR') or bt.request.environ.get('REMOTE_ADDR')
         if views_left == 0 or client_ip in config.WHITELISTED_VIEWS:
             pass
         elif views_left == 1:
