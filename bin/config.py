@@ -2,6 +2,7 @@ import os
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 from metrics import Byte, Time
+from bin import txtparser
 
 def strtobool(s):
     try:
@@ -28,3 +29,4 @@ DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', 0))
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DB = int(os.getenv('REDIS_DB', 0))
+WHITELISTED_VIEWS = txtparser.parse_file('view_whitelist.txt')
