@@ -11,4 +11,4 @@ class TestTxtParser(unittest.TestCase):
             "Fin du document"
         ]
 
-        self.assertEqual(txtparser.TxtParser.parse(raw), expected)
+        self.assertEqual(txtparser.parse(raw), expected)

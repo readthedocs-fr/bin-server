@@ -9,7 +9,7 @@ database = Redis(
     db=config.REDIS_DB
 )
 
-whitelisted_views = txtparser.TxtParser('view_whitelist.txt').parse_file()
+whitelisted_views = txtparser.parse_file('view_whitelist.txt')
 
 class Snippet:
     def __init__(self, ident, code, views_left, parentid):
