@@ -135,5 +135,5 @@ dmypy.json
 # Redis
 dump.rdb
 
-# Usage whitelisted IPs
-usage_whitelist.txt
+# Usage bypassed IPs
+usage_bypass.txt
