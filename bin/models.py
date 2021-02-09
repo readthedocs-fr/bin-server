@@ -41,7 +41,9 @@ class Snippet:
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
         parentid = snippet[b'parentid'].decode('ascii')
-        if views_left == 0 or bt.request.remote_addr in config.WHITELISTED_USAGES:
+        if views_left == 0:
+            pass
+        elif bt.request.remote_addr in config.USAGE_BYPASS:
             pass
         elif views_left == 1:
             database.delete(ident)
