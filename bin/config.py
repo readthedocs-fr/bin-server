@@ -2,7 +2,6 @@ import os
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 from metrics import Byte, Time
-from bin import txtparser
 
 def strtobool(s):
     try:
@@ -11,9 +10,14 @@ def strtobool(s):
         pass
     return s not in {False, "0", "false", "no"}
 
-def get_whitelisted_views():
+def parse_txt(path):
     try:
-        return txtparser.parse_file('view_whitelist.txt')
+        with open(path, 'r') as file:
+            return [
+                line.rstrip()
+                for line in file.readlines()
+                if not line.startswith('#')
+            ]
     except FileNotFoundError:
         return list()
 
@@ -35,4 +39,4 @@ DEFAULT_LIFETIME = Time(os.getenv('RTDBIN_DEFAULT_LIFETIME', 0))
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
 REDIS_DB = int(os.getenv('REDIS_DB', 0))
-WHITELISTED_VIEWS = get_whitelisted_views()
+WHITELISTED_VIEWS = set(parse_txt(os.getenv('RTDBIN_WHITELIST', 'view_whitelist.txt')))

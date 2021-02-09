@@ -41,8 +41,7 @@ class Snippet:
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
         parentid = snippet[b'parentid'].decode('ascii')
-        client_ip = bt.request.environ.get('HTTP_X_FORWARDED_FOR') or bt.request.environ.get('REMOTE_ADDR')
-        if views_left == 0 or client_ip in config.WHITELISTED_VIEWS:
+        if views_left == 0 or bt.request.remote_addr in config.WHITELISTED_VIEWS:
             pass
         elif views_left == 1:
             database.delete(ident)
