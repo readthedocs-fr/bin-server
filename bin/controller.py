@@ -4,10 +4,17 @@ Various HTTP routes the external world uses to communicate with the application.
 """
 
 import bottle as bt
+import re
 from pathlib import Path
 from metrics import Time
 from bin import root, config, models
 from bin.highlight import highlight, parse_language, parse_extension, languages
+
+
+BOTUARE = re.compile(r'|'.join([
+    re.escape('Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)'),
+    re.escape('facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'),
+]))
 
 
 @bt.route('/health', method='GET')
@@ -120,6 +127,9 @@ def get_html(snippetid, ext=None):
 
     :raises HTTPError: code 404 when the snippet is not found
     """
+    if BOTUARE.match(bt.request.headers.get('User-Agent', '')):
+        return bt.template('blank.html')
+
     try:
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
@@ -145,6 +155,9 @@ def get_raw(snippetid, ext=None):
     :param snippetid: (path) required snippet id
     :param ext: (path) ignored parameter
     """
+    if BOTUARE.match(bt.request.headers.get('User-Agent', '')):
+        return bt.template('blank.html')
+
     try:
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
