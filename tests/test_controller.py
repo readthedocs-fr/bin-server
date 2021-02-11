@@ -16,6 +16,10 @@ def make_snippet(ident, code):
 snippet_lipsum = make_snippet('lipsum', code="Lorem ipsum dolor sit amet")
 snippet_python = make_snippet('egg', code='print("Hello world")')
 snippet_htmlxss = make_snippet('htmlxss', code='<script>alert("XSS");</script>')
+snippet_classified = make_snippet('classified', code='T_xJV3P^FcvYijzH')
+
+UA_HUMAN = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0"
+UA_BOT = "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)"
 
 
 class HTMLSanitizer(HTMLParser):
@@ -193,3 +197,23 @@ class TestController(unittest.TestCase):
                 self.assertIn('Content-Type', res.headers)
                 mimetype = res.headers['Content-Type'].partition(';')[0]
                 self.assertEqual(mimetype, 'text/plain')
+
+    def test_discordbot(self):
+        with patch('bin.models.Snippet') as MockSnippet:
+            MockSnippet.get_by_id.return_value = snippet_classified
+
+            req = urlreq.Request(
+                "http://localhost:8012/raw/classified",
+                headers={'User-Agent': UA_BOT},
+            )
+            with urlreq.urlopen(req) as res:
+                MockSnippet.get_by_id.assert_not_called()
+                self.assertEqual(res.status, 200)
+
+            req = urlreq.Request(
+                "http://localhost:8012/raw/classified",
+                headers={'User-Agent': UA_HUMAN},
+            )
+            with urlreq.urlopen(req) as res:
+                MockSnippet.get_by_id.assert_called()
+                self.assertEqual(res.status, 200)
