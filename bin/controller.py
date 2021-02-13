@@ -4,6 +4,7 @@ Various HTTP routes the external world uses to communicate with the application.
 """
 
 import bottle as bt
+import quopri
 import re
 from pathlib import Path
 from metrics import Time
@@ -92,7 +93,7 @@ def post_new():
             code = part.file.read(config.MAXSIZE)
             ext = parse_extension(Path(part.filename).suffix.lstrip('.')) or ext
         if forms:
-            code = forms.get('code', '').encode('utf-8') or code
+            code = quopri.decodestring(forms.get('code', '').encode('latin-1')) or code
             ext = parse_extension(forms.get('lang')) or ext
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
