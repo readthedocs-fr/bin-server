@@ -16,7 +16,7 @@ code.addEventListener('keydown', (event) => {
     const caretPos = selectionStart + 1;
     code.focus();
     code.setSelectionRange(caretPos, caretPos);
-  } else if (event.code === 'KeyS' && (e.ctrlKey || e.metaKey) && form.checkValidity()) {
+  } else if (event.code === 'KeyS' && (event.ctrlKey || event.metaKey) && form.checkValidity()) {
     // ctrl+s triggers form submission
     event.preventDefault();
     form.submit();
