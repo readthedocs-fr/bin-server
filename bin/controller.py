@@ -4,7 +4,7 @@ Various HTTP routes the external world uses to communicate with the application.
 """
 
 import bottle as bt
-import quopri
+import cgi
 import re
 from pathlib import Path
 from metrics import Time
@@ -90,10 +90,12 @@ def post_new():
     try:
         if files:
             part = next(files.values())
-            code = part.file.read(config.MAXSIZE)
+            charset = cgi.parse_header(part.content_type)[1].get('charset', 'utf-8')
+            code = part.file.read(config.MAXSIZE).decode(charset)
             ext = parse_extension(Path(part.filename).suffix.lstrip('.')) or ext
         if forms:
-            code = quopri.decodestring(forms.get('code', '').encode('latin-1')) or code
+            # WSGI forces latin-1 decoding, this is wrong, we recode it in utf-8
+            code = forms.get('code', '').encode('latin-1').decode() or code
             ext = parse_extension(forms.get('lang')) or ext
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
