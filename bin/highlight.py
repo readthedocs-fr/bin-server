@@ -26,7 +26,7 @@ languages = [
     ('less', 'less'),
     ('lisp', 'lisp'),
     ('lua', 'lua'),
-    ('md', 'md'),  # markdown
+    ('md', 'markdown'),
     ('php', 'php'),
     ('pl', 'perl'),
     ('py', 'python'),
