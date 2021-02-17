@@ -1,5 +1,18 @@
 const form = document.forms[0];
+const lang = form.lang;
+const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
+
+const langAliases = {
+  txt: langs.indexOf('txt'),
+  svg: langs.indexOf('xml'),
+  jsonc: langs.indexOf('js'),
+  get jsx() {
+    return this.jsonc;
+  },
+  tsx: langs.indexOf('ts'),
+  vue: langs.indexOf('html'),
+}
 
 // remove the "required" error message that overflows the page
 code.addEventListener('invalid', (event) => event.preventDefault());
@@ -21,4 +34,25 @@ code.addEventListener('keydown', (event) => {
     event.preventDefault();
     form.submit();
   }
+});
+
+window.addEventListener('drop', async (event) => {
+  const files = event.dataTransfer.files;
+  if (files.length !== 1) {
+    return;
+  }
+
+  event.preventDefault();
+  const file = files[0];
+  const fileExtension = file.name.split('.').pop()?.toLowerCase() ?? '';
+
+  const langIndex = langAliases[fileExtension] ?? langs.indexOf(fileExtension);
+  if (langIndex === -1 && !confirm("Ce fichier n'est pas dans la liste des langages, voulez-vous quand même le charger ?")) {
+    return;
+  }
+
+  try {
+    code.value = await file.text();
+    lang.selectedIndex = Math.ceil((langIndex === -1 ? langAliases.txt : langIndex) / 2) + 1;
+  } catch (error) {} // the "file" is a directory (do nothing)
 });
