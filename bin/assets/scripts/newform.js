@@ -3,7 +3,7 @@ const lang = form.lang;
 const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
 
-const additionalLangs = {
+const langAliases = {
   txt: langs.indexOf('txt'),
   svg: langs.indexOf('xml'),
   jsonc: langs.indexOf('js'),
@@ -46,13 +46,13 @@ window.addEventListener('drop', async (event) => {
   const file = files[0];
   const fileExtension = file.name.split('.').pop()?.toLowerCase() ?? '';
 
-  const langIndex = additionalLangs[fileExtension] ?? langs.indexOf(fileExtension);
+  const langIndex = langAliases[fileExtension] ?? langs.indexOf(fileExtension);
   if (langIndex === -1 && !confirm("Ce fichier n'est pas dans la liste des langages, voulez-vous quand même le charger ?")) {
     return;
   }
 
-  try {=
+  try {
     code.value = await file.text();
-    lang.selectedIndex = Math.ceil((langIndex === -1 ? additionalLangs.txt : langIndex) / 2) + 1;
+    lang.selectedIndex = Math.ceil((langIndex === -1 ? langAliases.txt : langIndex) / 2) + 1;
   } catch (error) {} // the "file" is a directory (do nothing)
 });
