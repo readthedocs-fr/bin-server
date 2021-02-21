@@ -30,7 +30,6 @@ body {
     border-spacing: 0;
     border-collapse: separate;
     display: flex;
-    flex-flow: wrap row;
     overflow-x: scroll;
 }
 
