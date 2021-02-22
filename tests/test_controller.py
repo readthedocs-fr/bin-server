@@ -3,6 +3,7 @@ import html
 import re
 import unittest
 import urllib.request as urlreq
+from urllib.error import HTTPError
 from bin.models import Snippet
 from bottle import template as bottle_template
 from html.parser import HTMLParser
@@ -141,6 +142,14 @@ class TestController(unittest.TestCase):
             bottle.template.assert_called_once()
             self.assertEqual(res.status, 200)
             self.html_sanitizer.feed(res.read().decode())
+
+    def test_missing_parentid(self):
+        with patch('bin.models.Snippet') as MockSnippet:
+            MockSnippet.get_by_id.side_effect = KeyError('Snippet not found')
+            with self.assertRaises(HTTPError) as exc:
+                urlreq.urlopen("http://localhost:8012/?parentid=foo")
+
+            self.assertEqual(exc.exception.code, 404)
 
     def test_get_html(self):
         with patch('bin.models.Snippet') as MockSnippet:
