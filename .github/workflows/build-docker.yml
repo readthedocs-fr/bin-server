@@ -4,6 +4,8 @@ on:
   push:
     branches:
     - main
+    tags:
+    - 'v*'
 
 jobs:
   docker:
@@ -19,6 +21,9 @@ jobs:
         with:
           images: ghcr.io/readthedocs-fr/bin
           tag-sha: true
+          tag-semver: |
+            {{version}}
+            {{major}}.{{minor}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
