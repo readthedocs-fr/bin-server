@@ -22,16 +22,18 @@ body {
 }
 
 .highlight {
+    height: 100%;
     padding: 1em 0.6em 1em 0;
     background: transparent !important;
     font-family: Consolas, monospace;
     font-size: 1em;
-    overflow-x: scroll;
     border-spacing: 0;
     border-collapse: separate;
+    display: flex;
+    overflow-x: scroll;
 }
 
-tr, td {
+.highlight tr, td {
     vertical-align: baseline;
     white-space: pre;
 }
@@ -46,14 +48,15 @@ tr, td {
 
 .line-number {
     width: 1%;
-    min-width: 2em;
-    padding: 0 0.65em;
+    min-width: 1em;
+    padding: 0 0.5em;
     text-align: right;
     font-family: Consolas, monospace;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
     -moz-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .line-number::before {
@@ -83,7 +86,7 @@ tr, td {
     position: fixed;
     bottom: 0;
     right: 0;
-    padding: 0 1.5em 1em 0.5em;
+    padding: 0.7em;
     pointer-events: none;
     display: flex;
     align-items: center;
