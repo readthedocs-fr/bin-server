@@ -31,10 +31,17 @@ def get_new_form():
 
     :param lang: (query) optional lang that is selected in the lang selection instead of the configured default
     :param parentid: (query) optional 'parent' snippet to duplicate the code from
+
+    :raises HTTPError: code 404 when the 'parent' snippet is not found
     """
     parentid = bt.request.query.parentid
     lang = bt.request.query.lang or config.DEFAULT_LANGUAGE
-    code = models.Snippet.get_by_id(parentid).code if parentid else ""
+
+    try:
+        code = models.Snippet.get_by_id(parentid) if parentid else ""
+    except KeyError:
+        raise bt.HTTPError(404, "Parent snippet not found")
+
     return bt.template(
         'newform.html',
         languages=languages,
