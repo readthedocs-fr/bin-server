@@ -35,7 +35,7 @@ if (token) {
 }
 
 window.addEventListener('hashchange', () => {
-  [...selectedLocs].forEach((e) => e.classList.remove('selected'));
+  clearSelections();
   handleHash();
 })
 
@@ -43,11 +43,14 @@ locs.forEach((loc, i) => {
   loc.addEventListener('click', () => {
     // add the line location to the URL without affecting the history and without triggering a hashchange
     window.history.replaceState(undefined, undefined, `#L${i + 1}`);
-    // remove all selected lines
-    [...selectedLocs].forEach((e) => e.classList.remove('selected'));
+    clearSelections();
     loc.nextElementSibling.classList.add('selected');
   })
 })
+
+function clearSelections() {
+  [...selectedLocs].forEach((e) => e.classList.remove('selected'));
+}
 
 function handleHash() {
   const hashMatch = location.hash.match(/^(?:#L(\d+)(?:-L(\d+))?)$/i);
