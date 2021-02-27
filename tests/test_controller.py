@@ -1,6 +1,4 @@
 import bottle
-import html
-import re
 import unittest
 import urllib.request as urlreq
 from urllib.error import HTTPError
@@ -12,7 +10,7 @@ from unittest.mock import patch, MagicMock
 
 
 def make_snippet(ident, code):
-    return Snippet(ident=ident, code=code, views_left=float('+inf'), parentid='')
+    return Snippet(ident=ident, code=code, views_left=float('+inf'), parentid='',token=None)
 
 snippet_lipsum = make_snippet('lipsum', code="Lorem ipsum dolor sit amet")
 snippet_python = make_snippet('egg', code='print("Hello world")')

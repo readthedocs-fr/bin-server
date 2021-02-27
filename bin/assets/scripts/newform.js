@@ -2,6 +2,42 @@ const form = document.forms[0];
 const lang = form.lang;
 const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
+const token = form.token;
+
+form.addEventListener('submit', async (event) => {
+  if (!token.value) {
+    return;
+  }
+  event.preventDefault();
+  const res = await fetch('/new?redirect=0', {
+    method: 'POST',
+    body: new FormData(form),
+  });
+  const content = await res.text();
+
+  if (!res.ok) {
+    const actual = document.documentElement.innerHTML;
+    history.pushState(undefined, undefined, '/new');
+    document.documentElement.innerHTML = content;
+
+    window.addEventListener('popstate', (event) => {
+      if (!event.state) {
+        document.documentElement.innerHTML = actual;
+      }
+    }, { once: true });
+    return;
+  }
+
+  localStorage.setItem(`snippet-${content.match(/(\w+)\.\w+$/)[1]}`, token.value);
+  location.href = content;
+});
+token.addEventListener('click', () => {
+  navigator.clipboard.writeText(token.value).catch(() => {
+    // fallback to execCommand copy method
+    token.value.select();
+    document.execCommand('copy');
+  });
+})
 
 const langAliases = {
   txt: langs.indexOf('txt'),

@@ -6,8 +6,11 @@ Various HTTP routes the external world uses to communicate with the application.
 import bottle as bt
 import cgi
 import re
+import secrets
 from pathlib import Path
 from metrics import Time
+from secrets import token_urlsafe, compare_digest
+from distutils.util import strtobool
 from bin import root, config, models
 from bin.highlight import highlight, parse_language, parse_extension, languages
 
@@ -38,12 +41,13 @@ def get_new_form():
     lang = bt.request.query.lang or config.DEFAULT_LANGUAGE
 
     try:
-        code = models.Snippet.get_by_id(parentid) if parentid else ""
+        code = models.Snippet.get_by_id(parentid).code if parentid else ""
     except KeyError:
         raise bt.HTTPError(404, "Parent snippet not found")
 
     return bt.template(
         'newform.html',
+        token=secrets.token_urlsafe(16),
         languages=languages,
         default_language=lang,
         code=code,
@@ -70,10 +74,12 @@ def post_new():
     for the snippet.
 
     :param code: (form) required snippet text, can alternativaly be sent as a Multi-Part utf-8 file
-    :param lang: (form) optionnal language
-    :param maxusage: (form) optionnal maximum download of the snippet before it is deleted
-    :param lifetime: (form) optionnal time (defined in seconds) the snippet is keep in the database before it is deleted
-    :param parentid: (form) optionnal snippet id this new snippet is a duplicate of
+    :param lang: (form) optional language
+    :param maxusage: (form) optional maximum download of the snippet before it is deleted
+    :param lifetime: (form) optional time (defined in seconds) the snippet is keep in the database before it is deleted
+    :param parentid: (form) optional snippet id this new snippet is a duplicate of
+    :param token: (form) optional the "admin" token allows you to delete your snippet
+    :param redirect: (query) whether to redirect (code 303) to the generated url (1, the default) or to return the generated url as text (0)
 
     :raises HTTPError: code 411 when the ``Content-Length`` http header is missing
     :raises HTTPError: code 413 when the http request is too large (mostly because the snippet is too long)
@@ -107,6 +113,7 @@ def post_new():
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
             parentid = forms.get('parentid', '')
+            token = forms.get('token')
 
         if not code:
             raise ValueError("Code is missing")
@@ -119,11 +126,17 @@ def post_new():
                 models.Snippet.get_by_id(parentid)
             except KeyError:
                 raise ValueError("Parent does not exist")
+        if token and len(token) > 22:
+            raise ValueError("Token must not exceed 22 chars as of 16 random bytes base64 encoded")
     except ValueError as exc:
         raise bt.HTTPError(400, str(exc))
 
-    snippet = models.Snippet.create(code, maxusage, lifetime, parentid)
-    bt.redirect(f'/{snippet.id}.{ext}')
+    snippet = models.Snippet.create(code, maxusage, lifetime, parentid, token)
+    if strtobool(bt.request.query.redirect or '1'):
+    	bt.redirect(f'/{snippet.id}.{ext}')
+    else:
+        bt.response.content_type = 'text/plain'
+        return f"/{snippet.id}.{ext}"
 
 
 @bt.route('/<snippetid>', method='GET')
@@ -134,6 +147,7 @@ def get_html(snippetid, ext=None):
 
     :param snippetid: (path) required snippet id
     :param ext: (path) optional language file extension, used to determine the highlight backend
+    :param token: (query) optional the "admin" token
 
     :raises HTTPError: code 404 when the snippet is not found
     """
@@ -153,7 +167,34 @@ def get_html(snippetid, ext=None):
         ext=ext,
         snippetid=snippetid,
         parentid=snippet.parentid,
+        token=bt.request.query.token,
     )
+
+@bt.route('/<snippetid>', method='DELETE')
+@bt.route('/<snippetid>.<ext>', method='DELETE')
+def delete_snippet(snippetid, ext=None):
+    """
+    Delete a snippet
+
+    :param Authorization: (header) required "Authorization: Token <ADMIN_TOKEN>" the "admin" token
+
+    :raises HTTPError: code 400 when the Authorization (token) is missing
+    :raises HTTPError: code 404 when the snippet is not found
+    :raises HTTPError: code 401 when the token is incorrect
+    """
+    auth = bt.request.get_header('Authorization', '').split(None, 1)
+    if len(auth) != 2 or auth[0] != 'Token':
+        raise bt.HTTPError(400, "Token is missing")
+
+    try:
+        snippet = models.Snippet.get_by_id(snippetid)
+    except KeyError:
+        raise bt.HTTPError(404, "Snippet not found")
+
+    if not (snippet.token and secrets.compare_digest(snippet.token, auth[1])):
+        raise bt.HTTPError(401, "Unauthorized")
+
+    snippet.delete()
 
 
 @bt.route('/raw/<snippetid>', method='GET')
