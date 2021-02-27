@@ -32,7 +32,7 @@ code.addEventListener('keydown', (event) => {
     const { value, selectionStart, selectionEnd } = code;
 
     // inserts tab at the position of the caret
-    code.value = value.slice(0, selectionStart) + '\t' + value.slice(selectionEnd);
+    code.value = `${value.slice(0, selectionStart)}\t${value.slice(selectionEnd)}`;
 
     // puts caret after the newly inserted tab char
     const caretPos = selectionStart + 1;
