@@ -38,7 +38,7 @@ def get_new_form():
     lang = bt.request.query.lang or config.DEFAULT_LANGUAGE
 
     try:
-        code = models.Snippet.get_by_id(parentid) if parentid else ""
+        code = models.Snippet.get_by_id(parentid).code if parentid else ""
     except KeyError:
         raise bt.HTTPError(404, "Parent snippet not found")
 
