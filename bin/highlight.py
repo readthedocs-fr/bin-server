@@ -7,6 +7,7 @@ from pygments.formatters.html import HtmlFormatter
 
 
 languages = [
+    # (ext, lang)
     ('c', 'c'),
     ('cpp', 'cpp'),
     ('cs', 'csharp'),
@@ -44,24 +45,24 @@ languages = [
     ('xml', 'xml'),
     ('yml', 'yaml'),
 ]
-exttolang = {ext: language for ext, language in languages}
-langtoext = {language: ext for ext, language in languages}
+exttolang = {ext: lang for ext, lang in languages}
+langtoext = {lang: ext for ext, lang in languages}
 
 
-def parse_extension(lang_or_ext):
-    """ From a language name or a language extension, get a language """
-    lang_or_ext = (lang_or_ext or '').casefold()
-    if lang_or_ext in exttolang:
-        return lang_or_ext
-    return langtoext.get(lang_or_ext)
+def parse_extension(ext):
+    """ From a language extension, get a language """
+    ext = (ext or '').casefold()
+    if ext in langtoext:
+        return ext  # this is a lang already
+    return exttolang.get(ext)
 
 
-def parse_language(lang_or_ext):
-    """ From a language name or a language extension, get an extension """
-    lang_or_ext = (lang_or_ext or '').casefold()
-    if lang_or_ext in langtoext:
-        return lang_or_ext
-    return exttolang.get(lang_or_ext)
+def parse_language(lang):
+    """ From a language name, get an extension """
+    lang = (lang or '').casefold()
+    if lang in exttolang:
+        return lang  # this is an ext already
+    return langtoext.get(lang)
 
 
 

@@ -30,11 +30,11 @@
 
                 <select class="control" title="Langage" name=lang>
                     <option disabled>Langage</option>
-                    % for ext, lang in languages:
+                    % for _, lang in languages:
                     % if lang == default_language:
-                        <option value="{{ext}}" selected>{{lang.title()}}</option>
+                        <option value="{{lang}}" selected>{{lang.title()}}</option>
                     % else:
-                        <option value="{{ext}}">{{lang.title()}}</option>
+                        <option value="{{lang}}">{{lang.title()}}</option>
                     % end
                     % end
                 </select>
