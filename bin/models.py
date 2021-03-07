@@ -27,6 +27,20 @@ class Snippet:
         self.parentid = parentid  #: the original snippet this one is a duplicate of or an empty string
 
     @classmethod
+    def new_id(cls):
+        """ Generate a safe unique identifier """
+        for _ in range(20):
+            ident = pronounceable_passwd(config.IDENTSIZE)
+            if database.exists(ident):
+                continue
+            if ident in {'health', 'assets', 'new', 'raw'}:
+                continue
+            return ident
+
+        raise RuntimeError("No free identifier has been found after 20 attempts")
+
+
+    @classmethod
     def create(cls, code, maxusage, lifetime, parentid):
         """
         Save a snippet in the database and return a snippet object
@@ -36,12 +50,7 @@ class Snippet:
         :param lifetime: how long the snippet is saved before self-deletion
         :param parentid: the original snippet id this new snippet is a duplicate of, empty string for original snippet
         """
-        for _ in range(20):
-            ident = pronounceable_passwd(config.IDENTSIZE)
-            if not database.exists(ident):
-                break
-        else:
-            raise RuntimeError("No free identifier has been found after 20 attempts")
+        ident = cls.new_id()
         database.hset(ident, b'code', code)
         database.hset(ident, b'views_left', maxusage)
         database.hset(ident, b'parentid', parentid)
