@@ -89,7 +89,7 @@ def post_new():
     forms = bt.request.forms
 
     code = None
-    ext = parse_extension(config.DEFAULT_LANGUAGE)
+    lang = config.DEFAULT_LANGUAGE
     maxusage = config.DEFAULT_MAXUSAGE
     lifetime = config.DEFAULT_LIFETIME
     parentid = ''
@@ -99,15 +99,16 @@ def post_new():
             part = next(files.values())
             charset = cgi.parse_header(part.content_type)[1].get('charset', 'utf-8')
             code = part.file.read(config.MAXSIZE).decode(charset)
-            ext = parse_extension(Path(part.filename).suffix.lstrip('.')) or ext
+            lang = parse_extension(Path(part.filename).suffix.lstrip('.')) or lang
         if forms:
             # WSGI forces latin-1 decoding, this is wrong, we recode it in utf-8
             code = forms.get('code', '').encode('latin-1').decode() or code
-            ext = parse_extension(forms.get('lang')) or ext
+            lang = forms.get('lang') or lang
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
             parentid = forms.get('parentid', '')
 
+        ext = parse_language(lang)
         if not code:
             raise ValueError("Code is missing")
         if maxusage < 0:
