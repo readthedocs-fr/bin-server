@@ -1,8 +1,8 @@
-![PyPI](https://img.shields.io/pypi/v/rtd-bin-server)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/readthedocs-fr/bin-server/Continuous%20Integration?logo=github)
-![Discord](https://img.shields.io/discord/238975753969074177?logo=discord)
-![Read the Docs](https://img.shields.io/readthedocs/rtd-bin-server?logo=Read%20the%20Docs)
-![GitHub](https://img.shields.io/github/license/readthedocs-fr/bin-server)
+[![PyPI](https://img.shields.io/pypi/v/rtd-bin-server)](https://pypi.org/project/rtd-bin-server)
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/readthedocs-fr/bin-server/Continuous%20Integration?logo=github)](https://github.com/readthedocs-fr/bin-server/actions)
+[![Discord](https://img.shields.io/discord/238975753969074177?logo=discord)](https://discord.gg/PB9PekTNsg)
+[![Documentation](https://img.shields.io/readthedocs/rtd-bin-server?logo=Read%20the%20Docs)](https://rtd-bin-server.readthedocs.io/en/latest/)
+[![License](https://img.shields.io/github/license/readthedocs-fr/bin-server)](https://github.com/readthedocs-fr/bin-server/blob/main/LICENSE)
 
 # bin-server
 
