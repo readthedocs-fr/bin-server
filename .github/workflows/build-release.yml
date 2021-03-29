@@ -6,13 +6,15 @@ on:
 
 jobs:
   release-please:
+    name: Release Please
     runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag_name }}
 
     steps:
     - uses: GoogleCloudPlatform/release-please-action@v2
-      outputs:
-        released: ${{ steps.release.outputs.release_created }}
-        tag: ${{ steps.release.outputs.tag }}
+      id: release
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         release-type: simple
@@ -20,7 +22,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: [release-please]
+    needs: release-please
     if: ${{ needs.release-please.outputs.released }}
 
     steps:
