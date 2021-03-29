@@ -7,12 +7,13 @@ on:
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.release.outputs.release_created }}
+      tag: ${{ steps.release.outputs.tag }}
 
     steps:
     - uses: GoogleCloudPlatform/release-please-action@v2
-      outputs:
-        released: ${{ steps.release.outputs.release_created }}
-        tag: ${{ steps.release.outputs.tag }}
+      id: release
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         release-type: simple
