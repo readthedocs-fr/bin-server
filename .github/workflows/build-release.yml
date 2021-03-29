@@ -16,6 +16,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         release-type: simple
+        default-branch: main
 
   build:
     runs-on: ubuntu-latest
