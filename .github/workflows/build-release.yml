@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       released: ${{ steps.release.outputs.release_created }}
-      tag: ${{ steps.release.outputs.tag }}
+      tag: ${{ steps.release.outputs.tag_name }}
 
     steps:
     - uses: GoogleCloudPlatform/release-please-action@v2
