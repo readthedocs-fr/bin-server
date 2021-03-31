@@ -145,7 +145,7 @@ def get_html(snippetid, ext=None):
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    lang = parse_language(ext) or config.DEFAULT_LANGUAGE
+    lang = parse_extension(ext) or config.DEFAULT_LANGUAGE
     codehl = highlight(snippet.code, lang)
     return bt.template(
         'highlight.html',
