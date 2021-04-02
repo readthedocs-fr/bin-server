@@ -5,7 +5,7 @@
         <script src="/assets/scripts/newform.js" defer></script>
     </head>
     <body>
-        <form action="/new" method=POST id=post-snippet accept-charset=utf-8>
+        <form id=post-snippet name=post-snippet action="/new" method=POST accept-charset=utf-8>
             <textarea spellcheck=false placeholder="Entrez votre code ou glissez un fichier." name=code autofocus required>{{code}}</textarea>
             <input type=hidden name=parentid value="{{parentid}}">
 

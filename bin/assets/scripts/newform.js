@@ -1,4 +1,4 @@
-const form = document.forms[0];
+const form = document.forms['post-snippet'];
 const lang = form.lang;
 const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
