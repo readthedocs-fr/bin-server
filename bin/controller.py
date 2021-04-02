@@ -179,3 +179,29 @@ def get_raw(snippetid, ext=None):
 
     bt.response.headers['Content-Type'] = 'text/plain'
     return snippet.code
+
+@bt.route('/report', method='POST')
+def report():
+    """
+    Report a problematic snippet to the system administrator.
+
+    :param snippetid: (form) the reported snippet
+    :param name: (form) the name of the user reporting the problem
+
+    :raises HTTPError: code 400 when any of the snippetid or the name is missing
+    :raises HTTPError: code 404 when the reported snippet is not found
+    """
+    name = bt.request.forms.get("name", "").encode('latin-1').decode().strip()
+    snippetid = bt.request.forms.get("snippetid")
+    if not name:
+        raise bt.HTTPError(400, "Missing name")
+    if not snippetid:
+        raise bt.HTTPError(400, "Missing snippetid")
+
+    try:
+        snippet = models.Snippet.get_by_id(snippetid)
+    except KeyError:
+        raise bt.HTTPError(404, "Snippet not found")
+    logger.warning("The snippet %s got reported by %s", snippetid, name)
+
+    return bt.HTTPResponse("The snippet have been reported.")
