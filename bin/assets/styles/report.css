@@ -1,0 +1,14 @@
+#report {
+	position: absolute;
+	top: 0.5em;
+	right: 0.5em;
+	width: 1.5em;
+}
+
+#report label {
+	cursor: pointer;
+}
+
+#report input {
+	display: none;
+}
