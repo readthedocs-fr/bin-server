@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.0.3](https://www.github.com/readthedocs-fr/bin-server/compare/v1.0.2...v1.0.3) (2021-04-02)
+
+
+### Bug Fixes
+
+* synchronize /req.txt and /docs/req.txt ([8172198](https://www.github.com/readthedocs-fr/bin-server/commit/81721988a3bff6bfc2913fac327e5ad58f427503))
+
 ### [1.0.2](https://www.github.com/readthedocs-fr/bin-server/compare/v1.0.1...v1.0.2) (2021-03-29)
 
 
