@@ -5,6 +5,7 @@ Various HTTP routes the external world uses to communicate with the application.
 
 import bottle as bt
 import cgi
+import logging
 import re
 from pathlib import Path
 from metrics import Time
@@ -12,6 +13,7 @@ from bin import root, config, models
 from bin.highlight import highlight, parse_language, parse_extension, languages
 
 
+logger = logging.getLogger(__name__)
 BOTUARE = re.compile(r'|'.join([
     re.escape('Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)'),
     re.escape('facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)'),
@@ -124,6 +126,7 @@ def post_new():
         raise bt.HTTPError(400, str(exc))
 
     snippet = models.Snippet.create(code, maxusage, lifetime, parentid)
+    logger.info("New %s snippet of %s chars: %s", lang, len(code), snippet.id)
     bt.redirect(f'/{snippet.id}.{ext}')
 
 
