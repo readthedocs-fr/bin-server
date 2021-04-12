@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.1](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.0...v1.1.1) (2021-04-12)
+
+
+### Bug Fixes
+
+* **manifest:** update version file path ([c709527](https://www.github.com/readthedocs-fr/bin-server/commit/c709527a4d7715d83b01a2c9c977d5edf892d48a)), closes [#132](https://www.github.com/readthedocs-fr/bin-server/issues/132)
+
 ## [1.1.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.0.2...v1.1.0) (2021-04-11)
 
 
