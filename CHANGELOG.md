@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.2](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.1...v1.1.2) (2021-04-18)
+
+
+### Bug Fixes
+
+* **highlight:** optional startinline ([0bc3f7b](https://www.github.com/readthedocs-fr/bin-server/commit/0bc3f7b05a65490a962f830b1947f40397f14b84))
+
 ### [1.1.1](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.0...v1.1.1) (2021-04-12)
 
 
