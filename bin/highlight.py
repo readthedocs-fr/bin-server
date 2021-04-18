@@ -93,5 +93,5 @@ _html_formatter = _TableHtmlFormatter(linenos='bin-table', style='monokai')
 
 def highlight(code, language):
     """ Pretty html export of ``code`` using syntax highlighting """
-    lexer = get_lexer_by_name(language)
+    lexer = get_lexer_by_name(language, startinline=True)
     return pygments.highlight(code, lexer, _html_formatter)
