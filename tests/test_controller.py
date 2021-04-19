@@ -1,12 +1,14 @@
 import bottle
 import unittest
 import urllib.request as urlreq
-from urllib.error import HTTPError
-from bin.models import Snippet
+
 from bottle import template as bottle_template
 from html.parser import HTMLParser
 from threading import Thread
 from unittest.mock import patch, MagicMock
+from urllib.error import HTTPError
+
+from bin.models import Snippet
 
 
 def make_snippet(ident, code):
@@ -16,6 +18,7 @@ snippet_lipsum = make_snippet('lipsum', code="Lorem ipsum dolor sit amet")
 snippet_python = make_snippet('egg', code='print("Hello world")')
 snippet_htmlxss = make_snippet('htmlxss', code='<script>alert("XSS");</script>')
 snippet_classified = make_snippet('classified', code='T_xJV3P^FcvYijzH')
+snippet_brainfuck = make_snippet('brainfuck', code='++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>++++.+++++++++.')
 
 UA_HUMAN = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0"
 UA_BOT = "Mozilla/5.0 (compatible; Discordbot/2.0; +https://discordapp.com)"
@@ -100,6 +103,7 @@ class TestController(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         print("Starting builtin server in a daemon thread")
+
         th = Thread(target=bottle.run, daemon=True, kwargs={
             "host": "localhost",
             "port": 8012,
@@ -154,6 +158,7 @@ class TestController(unittest.TestCase):
             MockSnippet.get_by_id.return_value = snippet_lipsum
             with urlreq.urlopen("http://localhost:8012/lipsum") as res:
                 bottle.template.assert_called_once()
+                MockSnippet.get_by_id.assert_called_with(snippet_lipsum.id)
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
@@ -161,6 +166,7 @@ class TestController(unittest.TestCase):
             MockSnippet.get_by_id.return_value = snippet_python
             with urlreq.urlopen("http://localhost:8012/egg.py") as res:
                 bottle.template.assert_called_once()
+                MockSnippet.get_by_id.assert_called_with(snippet_python.id)
                 self.assertEqual(res.status, 200)
                 self.html_sanitizer.feed(res.read().decode())
 
@@ -169,14 +175,43 @@ class TestController(unittest.TestCase):
             MockSnippet.get_by_id.return_value = snippet_lipsum
             with urlreq.urlopen("http://localhost:8012/raw/lipsum") as res:
                 bottle.template.assert_not_called()
+                MockSnippet.get_by_id.assert_called_with(snippet_lipsum.id)
                 self.assertEqual(res.status, 200)
                 self.assertEqual(res.read().decode(), snippet_lipsum.code)
+
 
             MockSnippet.get_by_id.return_value = snippet_python
             with urlreq.urlopen("http://localhost:8012/raw/egg.py") as res:
                 bottle.template.assert_not_called()
+                MockSnippet.get_by_id.assert_called_with(snippet_python.id)
                 self.assertEqual(res.status, 200)
                 self.assertEqual(res.read().decode(), snippet_python.code)
+
+    def test_get_wrong_extension(self):
+        with patch('bin.models.Snippet') as MockSnippet, \
+             patch('bin.controller.highlight') as MockHighlight:  # from-imported
+            MockSnippet.get_by_id.return_value = snippet_lipsum
+            MockHighlight.return_value = ''
+
+            with urlreq.urlopen("http://localhost:8012/lipsum.idontexist") as res:
+                self.assertEqual(res.status, 200)
+
+            MockSnippet.get_by_id.assert_called_with(snippet_lipsum.id)
+            MockHighlight.assert_called_with(snippet_lipsum.code, 'text')
+
+    def test_get_hidden_extension(self):
+        with patch('bin.models.Snippet') as MockSnippet, \
+             patch('pygments.highlight') as MockHighlight:
+            MockSnippet.get_by_id.return_value = snippet_brainfuck
+            MockHighlight.return_value = ''
+
+            with urlreq.urlopen("http://localhost:8012/brainfuck.bf") as res:
+                self.assertEqual(res.status, 200)
+
+            MockSnippet.get_by_id.assert_called_with(snippet_brainfuck.id)
+            MockHighlight.assert_called_once()
+            self.assertEqual(MockHighlight.call_args[0][0], snippet_brainfuck.code)
+            self.assertIn('BrainfuckLexer', str(MockHighlight.call_args[0][1]))
 
     def test_against_xss(self):
         testcase = self
