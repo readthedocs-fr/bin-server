@@ -7,11 +7,11 @@ import bottle as bt
 import cgi
 import logging
 import re
+import os.path
 import secrets
-from pathlib import Path
 from metrics import Time
 from bin import root, config, models
-from bin.highlight import highlight, parse_language, parse_extension, languages
+from bin.highlight import highlight, languages, langtoext, exttolang
 
 
 logger = logging.getLogger(__name__)
@@ -94,27 +94,42 @@ def post_new():
 
     token = None
     code = None
-    lang = config.DEFAULT_LANGUAGE
+    lang = None
+    ext = None
     maxusage = config.DEFAULT_MAXUSAGE
     lifetime = config.DEFAULT_LIFETIME
     parentid = ''
 
     try:
+        # Form extraction
         if files:
             part = next(files.values())
             charset = cgi.parse_header(part.content_type)[1].get('charset', 'utf-8')
             code = part.file.read(config.MAXSIZE).decode(charset)
-            lang = parse_extension(Path(part.filename).suffix.lstrip('.')) or lang
+            ext = os.path.splitext(part.filename)[1][1:] or langtoext[config.DEFAULT_LANGUAGE]
         if forms:
             # WSGI forces latin-1 decoding, this is wrong, we recode it in utf-8
             code = forms.get('code', '').encode('latin-1').decode() or code
-            lang = forms.get('lang') or lang
+            lang = forms.get('lang') or config.DEFAULT_LANGUAGE
             maxusage = int(forms.get('maxusage') or maxusage)
             lifetime = Time(forms.get('lifetime') or lifetime)
             parentid = forms.get('parentid', '')
             token = forms.get('token')
 
-        ext = parse_language(lang)
+        # Form validation
+        if lang:
+            ext = langtoext.get(lang)
+            if ext is None:
+                logger.warning('Unknown lang %r, using %r.', lang, config.DEFAULT_LANGUAGE)
+                lang = config.DEFAULT_LANGUAGE
+                ext = langtoext[config.DEFAULT_LANGUAGE]
+
+        if ext:
+            lang = exttolang.get(ext)
+            if lang is None:
+                logger.warning('Unknown file extension %r, using %r.', ext, langtoext[config.DEFAULT_LANGUAGE])
+                lang = config.DEFAULT_LANGUAGE
+                ext = langtoext[config.DEFAULT_LANGUAGE]
         if not code:
             raise ValueError("Code is missing")
         if maxusage < 0:
@@ -155,8 +170,11 @@ def get_html(snippetid, ext=None):
         snippet = models.Snippet.get_by_id(snippetid)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
-    lang = parse_extension(ext) or config.DEFAULT_LANGUAGE
+
+    lang = langtoext.get(ext, config.DEFAULT_LANGUAGE)
+    ext = langtoext[lang]  # always use the prefered extension for that lang
     codehl = highlight(snippet.code, lang)
+
     return bt.template(
         'highlight.html',
         languages=languages,
@@ -235,7 +253,7 @@ def report():
         raise bt.HTTPError(400, "Missing snippetid")
 
     try:
-        snippet = models.Snippet.get_by_id(snippetid)
+        models.Snippet.get_by_id(snippetid)
     except KeyError:
         raise bt.HTTPError(404, "Snippet not found")
     logger.warning("The snippet %s got reported by %s", snippetid, name)

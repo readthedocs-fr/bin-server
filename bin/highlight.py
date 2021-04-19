@@ -1,10 +1,14 @@
 """ HTML highlighted code export and language tools """
 
-
+import os.path
 import pygments
-from pygments.lexers import get_lexer_by_name
+from pygments.lexers import get_all_lexers, get_lexer_by_name
 from pygments.formatters.html import HtmlFormatter
 
+
+# ==================================================================== #
+#                     Supported langages database                      #
+# ==================================================================== #
 
 languages = [
     # (ext, lang)
@@ -12,6 +16,7 @@ languages = [
     ('cpp', 'cpp'),
     ('cs', 'csharp'),
     ('css', 'css'),
+    ('dart', 'dart'),
     ('diff', 'diff'),
     ('erl', 'erlang'),
     ('ex', 'elixir'),
@@ -23,6 +28,7 @@ languages = [
     ('java', 'java'),
     ('js', 'javascript'),
     ('json', 'json'),
+    ('jl', 'julia'),
     ('kt', 'kotlin'),
     ('less', 'less'),
     ('lisp', 'lisp'),
@@ -48,23 +54,27 @@ languages = [
 exttolang = {ext: lang for ext, lang in languages}
 langtoext = {lang: ext for ext, lang in languages}
 
+def _load_more_languages():
+    """ Save more langs to the ``exttolang`` and ``langtoext`` maps """
+    for name, aliases, globs, _mimetypes in get_all_lexers():
+        if not globs:
+           continue
+        name = name.lower()
+        for glob in globs:
+            ext = os.path.splitext(glob)[1][1:]
+            langtoext.setdefault(name, ext)
+            exttolang.setdefault(ext, name)
+        for alias in aliases:
+            ext = langtoext[name]
+            langtoext.setdefault(alias, ext)
+            exttolang.setdefault(ext, alias)
 
-def parse_extension(ext):
-    """ From a language extension, get a language """
-    ext = (ext or '').casefold()
-    if ext in langtoext:
-        return ext  # this is a lang already
-    return exttolang.get(ext)
+_load_more_languages()
+del _load_more_languages
 
-
-def parse_language(lang):
-    """ From a language name, get an extension """
-    lang = (lang or '').casefold()
-    if lang in exttolang:
-        return lang  # this is an ext already
-    return langtoext.get(lang)
-
-
+# ==================================================================== #
+#                 Plaintext to stylized HTML utilities                 #
+# ==================================================================== #
 
 class _TableHtmlFormatter(HtmlFormatter):
     """
