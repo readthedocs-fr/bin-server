@@ -2,6 +2,7 @@ const locs = [...document.getElementsByClassName('line-number')];
 const selectedLocs = document.getElementsByClassName('selected');
 
 handleHash();
+
 window.addEventListener('hashchange', () => {
   [...selectedLocs].forEach((e) => e.classList.remove('selected'));
   handleHash();

@@ -10,6 +10,8 @@
             <input type=hidden name=parentid value="{{parentid}}">
 
             <div class="controls">
+                <input name=token class="control" title="Cliquez pour copier. Ce token vous permet de supprimer votre snippet à tout moment (e.g. /turick.ts?token=aUiJR4593)." value="{{token}}" readonly>
+                
                 <input class="control" list=maxusage-presets type="number" min="0" title="Nombre d'utilisation maximum : 0 ou 10, ect." placeholder="Nombre d'utilisation maximum : 0 ou 10, ect." name=maxusage>
                 <datalist id=maxusage-presets>
                     <option value="0">

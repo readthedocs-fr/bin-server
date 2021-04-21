@@ -20,11 +20,12 @@ class Snippet:
     and that is retrivable via an unique URL.
     """
 
-    def __init__(self, ident, code, views_left, parentid):
+    def __init__(self, ident, code, views_left, parentid, token):
         self.id = ident  #: snippet unique identifier
         self.code = code  #: snippet text
         self.views_left = views_left  #: how many time this snippet can be retrieved again
         self.parentid = parentid  #: the original snippet this one is a duplicate of or an empty string
+        self.token = token #: the admin token of the snippet
 
     @classmethod
     def new_id(cls):
@@ -41,7 +42,7 @@ class Snippet:
 
 
     @classmethod
-    def create(cls, code, maxusage, lifetime, parentid):
+    def create(cls, code, maxusage, lifetime, parentid, token=None):
         """
         Save a snippet in the database and return a snippet object
 
@@ -49,14 +50,17 @@ class Snippet:
         :param maxusage: how many times this snippet can be retrieve before self-deletion
         :param lifetime: how long the snippet is saved before self-deletion
         :param parentid: the original snippet id this new snippet is a duplicate of, empty string for original snippet
+        :param token: the "admin" token of the snippet, ``None`` if the snippet has no "admin" token
         """
         ident = cls.new_id()
         database.hset(ident, b'code', code)
         database.hset(ident, b'views_left', maxusage)
         database.hset(ident, b'parentid', parentid)
+        if token:
+            database.hset(ident, b'token', token)
         if lifetime > 0:
             database.expire(ident, int(lifetime))
-        return cls(ident, code, maxusage, parentid)
+        return cls(ident, code, maxusage, parentid, token)
 
     @classmethod
     def get_by_id(cls, ident):
@@ -74,6 +78,7 @@ class Snippet:
         code = snippet[b'code'].decode('utf-8')
         views_left = int(snippet[b'views_left'].decode('utf-8'))
         parentid = snippet[b'parentid'].decode('ascii')
+        token = snippet.get(b'token', b'').decode() or None
         if views_left == 0:
             pass
         elif views_left == 1:
@@ -81,4 +86,10 @@ class Snippet:
         else:
             database.hincrby(ident, 'views_left', -1)
 
-        return cls(ident, code, views_left, parentid)
+        return cls(ident, code, views_left, parentid, token)
+
+    def delete(self):
+        """
+        Delete the snippet from the database
+        """
+        database.delete(self.id)
