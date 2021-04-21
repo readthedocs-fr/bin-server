@@ -74,10 +74,10 @@ def post_new():
     for the snippet.
 
     :param code: (form) required snippet text, can alternativaly be sent as a Multi-Part utf-8 file
-    :param lang: (form) optionnal language
-    :param maxusage: (form) optionnal maximum download of the snippet before it is deleted
-    :param lifetime: (form) optionnal time (defined in seconds) the snippet is keep in the database before it is deleted
-    :param parentid: (form) optionnal snippet id this new snippet is a duplicate of
+    :param lang: (form) optional language
+    :param maxusage: (form) optional maximum download of the snippet before it is deleted
+    :param lifetime: (form) optional time (defined in seconds) the snippet is keep in the database before it is deleted
+    :param parentid: (form) optional snippet id this new snippet is a duplicate of
     :param token: (form) optional the "admin" token allows you to delete your snippet
 
     :raises HTTPError: code 411 when the ``Content-Length`` http header is missing
