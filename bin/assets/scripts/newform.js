@@ -2,6 +2,15 @@ const form = document.forms['post-snippet'];
 const lang = form.lang;
 const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
+const token = form.token;
+
+token.addEventListener('click', () => {
+  navigator.clipboard.writeText(token.value).catch(() => {
+    // fallback to execCommand copy method
+    token.value.select();
+    document.execCommand('copy');
+  });
+})
 
 const langAliases = {
   txt: langs.indexOf('txt'),
