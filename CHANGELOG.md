@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.2...v1.2.0) (2021-04-22)
+
+
+### Features
+
+* bin deletion ([7e45897](https://www.github.com/readthedocs-fr/bin-server/commit/7e45897ef00b4130a210cca818545647a4a56a01))
+* favicon ([5754e8c](https://www.github.com/readthedocs-fr/bin-server/commit/5754e8cff804d91a24f869f51f23505486e8189a))
+
 ### [1.1.2](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.1...v1.1.2) (2021-04-18)
 
 
