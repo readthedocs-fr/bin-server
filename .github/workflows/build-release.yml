@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
 
+env:
+  PYTHON_VERSION: 3.8
+  NODE_VERSION: lts/*
+
 jobs:
   release-please:
     name: Release Please
@@ -27,15 +31,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ env.NODE_VERSION }}
     
     - name: Install dependencies
       run: |
+        yarn install --frozen-lockfile
         python -m pip install --upgrade pip
         pip install wheel setuptools
+
+    - name: Bundle
+      run: node bundler.js 'bin/views/*.html' 'bin/assets' 6
     
     - name: Build tar.gz
       run: python3 setup.py sdist
