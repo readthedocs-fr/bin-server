@@ -31,30 +31,19 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
-    
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install wheel setuptools rjsmin rcssmin
-    
+        pip install build wheel setuptools rjsmin rcssmin
+
     - name: Build tar.gz
-      run: python3 setup.py sdist
-    
+      run: python -m build --sdist .
+
     - name: Build wheel
       run: |
-        bundlejs="$(sha224sum assets/scripts/*.js | sha224sum | cut -d ' ' -f1).js"
-        bundlecss="$(sha224sum assets/styles/*.css | sha224sum | cut -d ' ' -f1).css"
-        sed '/<script.*src=/d' bin/views/*.html
-        sed "/<link.*rel=[\"']?stylesheet/d" bin/views/*.html
-        echo "<script type=javascript src=\"/assets/${bundlejs}\" defer></script>" >> bin/views/head.html
-        echo "<link rel=stylesheet href=\"/assets/${bundlecss}\">" >> bin/views/head.html
-        cat bin/assets/scripts/*.js | python -m rjsmin > ${bundlejs}
-        cat bin/assets/styles/*.css | python -m rcssmin > ${bundlecss}
-        rm bin/assets/scripts/*.js
-        rm bin/assets/styles/*.css
-        mv ${bundlejs} bin/assets/
-        mv ${bundlecss} bin/assets/
-        python3 setup.py bdist_wheel
+        ./bundle.sh
+        python -m build --wheel .
 
     - name: Upload tar.gz and wheel
       uses: svenstaro/upload-release-action@v2
