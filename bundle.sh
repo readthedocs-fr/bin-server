@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"/bin
 
-#test -e .git && echo This script remove assets, better not run it in development. && exit 1
+test -e .git && echo This script remove assets, better not run it in development. && exit 1
 
 for dir in assets/scripts assets/styles
 do
