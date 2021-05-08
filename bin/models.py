@@ -32,13 +32,17 @@ class Snippet:
         """ Generate a safe unique identifier """
         for _ in range(20):
             ident = pronounceable_passwd(config.IDENTSIZE)
+
+            if len(ident) != config.IDENTSIZE:
+                continue
+            if ident in {'health', 'assets', 'new', 'raw', 'report'}:
+                continue
             if database.exists(ident):
                 continue
-            if ident in {'health', 'assets', 'new', 'raw'}:
-                continue
+
             return ident
 
-        raise RuntimeError("No free identifier has been found after 20 attempts")
+        raise RuntimeError("No free or valid identifier has been found after 20 attempts")
 
 
     @classmethod
