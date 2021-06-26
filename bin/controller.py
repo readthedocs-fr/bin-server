@@ -93,6 +93,7 @@ def post_new():
     files = bt.request.files
     forms = bt.request.forms
 
+    token = None
     code = None
     lang = config.DEFAULT_LANGUAGE
     maxusage = config.DEFAULT_MAXUSAGE
