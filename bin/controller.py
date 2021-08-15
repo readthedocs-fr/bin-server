@@ -47,7 +47,6 @@ def get_new_form():
 
     return bt.template(
         'newform.html',
-        token=secrets.token_urlsafe(16),
         languages=languages,
         default_language=lang,
         code=code,
