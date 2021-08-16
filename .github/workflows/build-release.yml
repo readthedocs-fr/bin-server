@@ -19,6 +19,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         release-type: simple
         default-branch: main
+        changelog-types: '[{"type":"feat","section":"Features"},{"type":"fix","section":"Bug Fixes"},{"type":"perf","section":"Performance Improvements"},{"type":"deps","section":"Dependencies"},{"type":"revert","section":"Reverts"},{"type":"docs","section":"Documentation"},{"type":"style","section":"Styles","hidden":true},{"type":"chore","section":"Miscellaneous Chores","hidden":true},{"type":"refactor","section":"Code Refactoring","hidden":true},{"type":"test","section":"Tests","hidden":true},{"type":"build","section":"Build System","hidden":true},{"type":"ci","section":"Continuous Integration","hidden":true}]'
 
   build:
     runs-on: ubuntu-latest
