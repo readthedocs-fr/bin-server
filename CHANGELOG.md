@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.3.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.2.0...v1.3.0) (2021-11-19)
+
+
+### Features
+
+* remove frontend for bin deletion ([595e8e5](https://www.github.com/readthedocs-fr/bin-server/commit/595e8e5831be969eeb7aeaf338aba69004f85f92))
+
+
+### Bug Fixes
+
+* force identifier length to IDENTSIZE ([9c8865e](https://www.github.com/readthedocs-fr/bin-server/commit/9c8865e3fc2d2eecfe45e956ae4648adceafe0e0))
+* include assets' root files ([f0bdd82](https://www.github.com/readthedocs-fr/bin-server/commit/f0bdd825ba6f90414ea133ebd15a07a9447f9995))
+* undeclared 'token' error ([1c4e5e3](https://www.github.com/readthedocs-fr/bin-server/commit/1c4e5e3c0171a868e067d6136bdc0e26b369f2a9))
+
+
+### Dependencies
+
+* update pygments and other dependencies ([b8b6eee](https://www.github.com/readthedocs-fr/bin-server/commit/b8b6eee7cba2b33faf232da4c6d000822184d669))
+
 ## [1.2.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.1.2...v1.2.0) (2021-04-22)
 
 
