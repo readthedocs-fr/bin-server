@@ -20,6 +20,8 @@ The options are:
 * ``REDIS_HOST``: The Redis host adress to connect to
 * ``REDIS_PORT``: The Redis port to connect to
 * ``REDIS_DB``: The Redis database to connect to
+* ``REDIS_PASSWORD``: The password of the Redis database to connect to
+* ``REDIS_USERNAME``: The username of the Redis database to connect to
 """
 
 
@@ -45,7 +47,7 @@ def strtobool(s):
 def _setup():
     global HOST, PORT, MAXSIZE, IDENTSIZE
     global DEFAULT_LANGUAGE, DEFAULT_MAXUSAGE, DEFAULT_LIFETIME
-    global REDIS_HOST, REDIS_PORT, REDIS_DB
+    global REDIS_HOST, REDIS_PORT, REDIS_DB, REDIS_PASSWORD, REDIS_USERNAME
 
     cli = ArgumentParser()
     cli.add_argument('--rtdbin-port', metavar="PORT", type=int, help="builtin server port")
@@ -67,6 +69,8 @@ def _setup():
     REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
     REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
     REDIS_DB = int(os.getenv('REDIS_DB', 0))
+    REDIS_PASSWORD = os.getenv('REDIS_PASSWORD') or None
+    REDIS_USERNAME = os.getenv('REDIS_USERNAME') or None
 
     # Configure logging
     if "gunicorn" in server_software:
