@@ -33,6 +33,8 @@ La configuration complète par défaut est reprise ci-dessous :
     REDIS_HOST=localhost
     REDIS_PORT=6379
     REDIS_DB=0
+    REDIS_PASSWORD=
+    REDIS_USERNAME=
 
 Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibliothèque standard de Python pour traiter les requêtes. Ce serveur est propice dans un environnement de développement ou lorsque le volume d'utilisateur est réduit. Pour de meilleures performances, [un serveur tiers compatible wsgi](https://wsgi.readthedocs.io/en/latest/servers.html) peut être utilisé à la place.
 

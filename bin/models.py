@@ -10,7 +10,9 @@ from bin import config
 database = Redis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
-    db=config.REDIS_DB
+    db=config.REDIS_DB,
+    password=config.REDIS_PASSWORD,
+    username=config.REDIS_USERNAME,
 )
 
 
