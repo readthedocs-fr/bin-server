@@ -24,15 +24,15 @@ Par défaut, le service ne traite qu'un client à la fois, écoute à l'adresse 
 
 La configuration complète par défaut est reprise ci-dessous :
 
-    RTDBIN_HOST=localhost
-    RTDBIN_PORT=8012
-    RTDBIN_MAXSIZE=16kiB
-    RTDBIN_DEFAULT_LANGUAGE=text
-    RTDBIN_DEFAULT_MAXUSAGE=0
-    RTDBIN_DEFAULT_LIFETIME=0
-    REDIS_HOST=localhost
-    REDIS_PORT=6379
-    REDIS_DB=0
+	RTDBIN_HOST=localhost
+	RTDBIN_PORT=8012
+	RTDBIN_MAXSIZE=16kiB
+	RTDBIN_DEFAULT_LANGUAGE=text
+	RTDBIN_DEFAULT_MAXUSAGE=0
+	RTDBIN_DEFAULT_LIFETIME=0
+	REDIS_HOST=localhost
+	REDIS_PORT=6379
+	REDIS_DB=0
 
 Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibliothèque standard de Python pour traiter les requêtes. Ce serveur est propice dans un environnement de développement ou lorsque le volume d'utilisateur est réduit. Pour de meilleures performances, [un serveur tiers compatible wsgi](https://wsgi.readthedocs.io/en/latest/servers.html) peut être utilisé à la place.
 
@@ -40,6 +40,15 @@ Par défaut, le service utilise le serveur web `wsgiref` disponible dans la bibl
 	$ gunicorn bin:app
 
 Des fichiers de configuration d'exemples pour `nginx`, `systemd` et `gunicorn` sont disponibles dans le [wiki](https://github.com/readthedocs-fr/bin/wiki/systemd-nginx-gunicorn).
+
+## Bundling
+
+`bin-server` dispose d'un outil de bundling. Il permet de minifier et éventuellement compresser les ressources (scripts, feuilles de styles, SVGs, etc.).
+
+	$ npm install
+	$ node bundler.js 'bin/views/*.html' 'bin/assets' 6
+
+Le premier argument est le chemin (Glob accepté) vers le dossier contenant les vues HTML. Le second est le chemin vers le dossier contentant les ressources statiques. Le troisième est le niveau de compression GZip à appliquer, il est optionnel, et s'il est omis, aucune compression GZip ne sera faite.
 
 ## Contribution
 

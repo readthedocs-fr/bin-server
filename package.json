@@ -1,0 +1,19 @@
+{
+  "name": "bin-bundler",
+  "main": "bundler.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "bundle": "npm start"
+  },
+  "dependencies": {
+    "cssnano": "^5.0.1",
+    "cssnano-preset-advanced": "^5.0.0",
+    "fast-glob": "^3.2.5",
+    "postcss": "^8.2.12",
+    "slash": "^4.0.0",
+    "terser": "^5.6.1"
+  }
+}
