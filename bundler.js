@@ -19,7 +19,7 @@ class Processor {
   /**
    * Creates a new processor.
    * @param {RegExp} pattern The RegExp pattern to match the resources path for this processor.
-   * @param {*} processor The processor function.
+   * @param {(file: string, path: string) => Promise<string> | string} processor The processor function.
    */
   constructor(pattern, processor) {
     this.pattern = pattern;
@@ -39,9 +39,9 @@ class Processor {
   /**
    * Process (minify) the given resource file.
    * @param {string} path The path to the resource file.
-   * @returns {string} The processed (minified) file content.
+   * @returns {Promise<string>} The processed (minified) file content.
    */
-  process(path) {
+  async process(path) {
     return this.processor(readFileSync(path, 'utf8'), path);
   }
 }
