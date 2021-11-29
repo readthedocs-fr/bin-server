@@ -6,6 +6,14 @@
         <link rel=stylesheet href="/assets/styles/monokai.css">
         <script src="/assets/scripts/loc.js" defer></script>
         <script src="/assets/scripts/report.js" defer></script>
+        <script src="/assets/scripts/change-lang.js" defer></script>
+        <noscript>
+            <style>
+                #lang-selection {
+                    display: none;
+                }
+            </style>
+        </noscript>
     </head>
     <body>
 {{!codehl}}
@@ -20,6 +28,17 @@
         </form>
 
         <div class="controls">
+            <select id=lang-selection class="control" title="Langage">
+                <option disabled>Langage</option>
+                % for ext_, lang_ in languages:
+                    % if lang_ == lang:
+                        <option value="{{ext_}}" selected>{{lang_.title()}}</option>
+                    % else:
+                        <option value="{{ext_}}">{{lang_.title()}}</option>
+                    % end
+                % end
+            </select>
+
             % if parentid:
             <a class="control" title="Voir la révision précédente" href="/{{parentid}}.{{ext}}">
                 % include('svg.html', name='history')

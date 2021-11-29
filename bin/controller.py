@@ -159,6 +159,7 @@ def get_html(snippetid, ext=None):
     codehl = highlight(snippet.code, lang)
     return bt.template(
         'highlight.html',
+        languages=languages,
         codehl=codehl,
         lang=lang,
         ext=ext,
