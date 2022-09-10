@@ -1,8 +1,13 @@
-bottle==0.12.19
+async-timeout==4.0.2
+bottle==0.12.23
+Deprecated==1.2.13
 genpw==1.0.0.post1
 jmetrics==1.0.3
-Pygments==2.8.0
-python-dotenv==0.15.0
-redis==3.5.3
+packaging==21.3
+Pygments==2.13.0
+pyparsing==3.0.9
+python-dotenv==0.21.0
+redis==4.3.4
 sphinx-rtd-theme==0.5.1
 sphinxcontrib-httpdomain==1.7.0
+wrapt==1.14.1
