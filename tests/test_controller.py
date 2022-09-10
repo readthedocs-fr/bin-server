@@ -49,12 +49,11 @@ class TestController(unittest.TestCase):
             else:
                 break
 
-        bottle.template = MagicMock()
-        bottle.template.side_effect = bottle_template
-
-    @classmethod
-    def tearDownClass(cls):
-        bottle.template = bottle_template
+        mock_bt_tmpl = MagicMock()
+        mock_bt_tmpl.side_effect = bottle.template
+        patch_bt_tmpl = patch.object(bottle, 'template', mock_bt_tmpl)
+        patch_bt_tmpl.start()
+        cls.addClassCleanup(patch_bt_tmpl.stop)
 
     def setUp(self):
         self.html_sanitizer = HTMLSanitizer(self)
