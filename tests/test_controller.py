@@ -8,7 +8,9 @@ from threading import Thread
 from unittest.mock import patch, MagicMock
 from urllib.error import HTTPError
 
+import bin as binmod
 from bin.models import Snippet
+from .fake_config import FakeConfig
 from .html_sanitizer import HTMLSanitizer
 
 
@@ -49,6 +51,11 @@ class TestController(unittest.TestCase):
             else:
                 break
 
+        cls.config = FakeConfig()
+        patch_config = patch.object(binmod.controller, 'config', cls.config)
+        patch_config.start()
+        cls.addClassCleanup(patch_config.stop)
+
         mock_bt_tmpl = MagicMock()
         mock_bt_tmpl.side_effect = bottle.template
         patch_bt_tmpl = patch.object(bottle, 'template', mock_bt_tmpl)
@@ -58,6 +65,7 @@ class TestController(unittest.TestCase):
     def setUp(self):
         self.html_sanitizer = HTMLSanitizer(self)
         bottle.template.reset_mock()
+        self.config.clear()
 
     # =====
 

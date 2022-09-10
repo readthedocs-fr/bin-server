@@ -30,6 +30,7 @@ import os
 from argparse import ArgumentParser
 from dotenv import load_dotenv
 from metrics import Byte, Time
+from pprint import pformat
 
 
 logger = logging.getLogger(__name__)
@@ -42,6 +43,13 @@ def strtobool(s):
     except AttributeError:
         pass
     return s not in {False, "0", "false", "no"}
+
+
+def asdict():
+    return {
+        key: value for key, value in globals().items()
+        if key.isupper() and not key.startswith('__')
+    }
 
 
 def _setup():
@@ -90,10 +98,6 @@ def _setup():
         "Detected WSGI server: %s.",
         server_software or 'builtin wsgiref (unsafe for production)'
     )
-    logger.debug(
-        "Runtime configuration:\n  %s", "\n  ".join([
-        f"{key}: {val}" for key, val in globals().items()
-        if key.isupper() and not key.startswith('__')
-    ]))
+    logger.debug("Runtime configuration:\n%s", pformat(asdict()))
 
 _setup()
