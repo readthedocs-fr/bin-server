@@ -86,7 +86,7 @@ class _TableHtmlFormatter(HtmlFormatter):
         if options.get('linenos', False) == 'bin-table':
             self.linenos = 3
 
-    def wrap(self, source, outfile):
+    def wrap(self, source, outfile=None):
         if self.linenos == 3:
             source = self._wrap_table(source)
         yield from source

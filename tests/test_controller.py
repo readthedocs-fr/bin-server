@@ -6,6 +6,7 @@ from bottle import template as bottle_template
 from html.parser import HTMLParser
 from threading import Thread
 from unittest.mock import patch, MagicMock
+from urllib.parse import urlencode
 from urllib.error import HTTPError
 
 import bin as binmod
@@ -193,3 +194,27 @@ class TestController(unittest.TestCase):
             with urlreq.urlopen(req) as res:
                 MockSnippet.get_by_id.assert_called()
                 self.assertEqual(res.status, 200)
+
+    def test_new_form(self):
+        with patch('bin.models.Snippet') as MockSnippet:
+            MockSnippet.create.return_value = snippet_lipsum
+            MockSnippet.get_by_id.return_value = snippet_lipsum
+
+            data = urlencode({'code': snippet_lipsum.code}).encode()
+            req = urlreq.Request(
+                'http://localhost:8012/new',
+                data=data,
+                headers={
+                    'Content-Length': str(len(data))
+                }
+            )
+
+            with urlreq.urlopen(req) as res:
+                MockSnippet.create.assert_called_with(
+                    snippet_lipsum.code,
+                    self.config.DEFAULT_MAXUSAGE,
+                    self.config.DEFAULT_LIFETIME,
+                    '',  # parentid
+                    None,  # token
+                )
+                self.assertEqual(res.url, 'http://localhost:8012/lipsum.txt')

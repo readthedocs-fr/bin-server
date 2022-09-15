@@ -84,7 +84,7 @@ def post_new():
     :raises HTTPError: code 400 with a sensible status when the form processing fails
     """
     content_length = bt.request.get_header('Content-Length')
-    if content_length is None:
+    if not content_length:
         raise bt.HTTPError(411, "Content-Length required")
     if int(content_length) > config.MAXSIZE:
         raise bt.HTTPError(413, f"Payload too large, we accept maximum {config.MAXSIZE}")
