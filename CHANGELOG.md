@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.4.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.3.0...v1.4.0) (2023-03-13)
+
+
+### Features
+
+* **config:** support redis password and username ([26b4fa4](https://www.github.com/readthedocs-fr/bin-server/commit/26b4fa4a67ff99fee9b0dd1f451017b32addb911))
+* **front:** add option to easily change lang ([f829940](https://www.github.com/readthedocs-fr/bin-server/commit/f8299401c65f8d14cf8e9bddde93246926d5859d))
+* **front:** externalize SVGs ([fbdf918](https://www.github.com/readthedocs-fr/bin-server/commit/fbdf918b24a693324619c75d656387709a016472))
+* **highlight:** allow all languages ([9f39fef](https://www.github.com/readthedocs-fr/bin-server/commit/9f39fef7feeb621cfa98c2a2e1e08f04a529dd55)), closes [#119](https://www.github.com/readthedocs-fr/bin-server/issues/119)
+* **rtdbin.sh:** configurable destination site ([25f21e9](https://www.github.com/readthedocs-fr/bin-server/commit/25f21e93c436011778cc13b0e689ebf70ec3b4a5))
+* **tests:** new FakeConfig utility ([c83c36f](https://www.github.com/readthedocs-fr/bin-server/commit/c83c36faf4da4d3404984d5ba1def1c3d5892cf1))
+* **tests:** test the /new url ([9e71701](https://www.github.com/readthedocs-fr/bin-server/commit/9e71701bd55be184b733279254798cd835c21149))
+
+
+### Bug Fixes
+
+* **front:** typos in form placeholder tutorial ([2adcc2f](https://www.github.com/readthedocs-fr/bin-server/commit/2adcc2f9198f54dccaadaaeb21499dcb22f4230c)), closes [#168](https://www.github.com/readthedocs-fr/bin-server/issues/168)
+* **tests:** use cleanup instead of tearDown ([c3d27fb](https://www.github.com/readthedocs-fr/bin-server/commit/c3d27fbcd415fb898ac47ecc47e1af8b8584b1f9))
+
 ## [1.3.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.2.0...v1.3.0) (2021-11-19)
 
 
