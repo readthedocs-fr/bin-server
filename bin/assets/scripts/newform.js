@@ -2,15 +2,12 @@ const form = document.forms['post-snippet'];
 const lang = form.lang;
 const langs = [...lang.options].slice(1).flatMap((option) => [option.value, option.textContent.toLowerCase()]);
 const code = form.code;
-const token = form.token;
 
-token.addEventListener('click', () => {
-  navigator.clipboard.writeText(token.value).catch(() => {
-    // fallback to execCommand copy method
-    token.value.select();
-    document.execCommand('copy');
-  });
-})
+// NOTE: increment this number on Service Worker update
+const SW_VERSION = 0;
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js?v=' + SW_VERSION);
+}
 
 const langAliases = {
   txt: langs.indexOf('txt'),
