@@ -135,5 +135,6 @@ dump.rdb
 
 # Dotfiles
 .*
+!.dockerignore
 !.gitignore
 !.readthedocs.yml
