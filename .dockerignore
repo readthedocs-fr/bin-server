@@ -1,0 +1,11 @@
+.git/
+.github/
+docs/
+tests/
+.dockerignore
+.gitignore
+.readthedocs.yml
+CHANGELOG.md
+Dockerfile
+README.md
+rtdbin.sh
