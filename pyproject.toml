@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rtd-bin-server"
+version = "1.4.0"
+description = "A pastebin for Read The Docs discord community"
+readme = "README.md"
+#requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name="Read The Docs", email="opensource@readthedocs.fr" },
+]
+classifiers = [
+  "Environment :: No Input/Output (Daemon)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+dependencies = [
+  "bottle",
+  "genpw",
+  "Pygments",
+  "python-dotenv",
+  "redis",
+  "jmetrics",
+]
+
+[project.urls]
+Homepage = "https://github.com/readthedocs-fr/bin-server"
+Download = "https://pypi.org/simple/rtd-bin-server//"
+Documentation = "https://rtd-bin-server.readthedocs.io/en/latest/"
+
+
+[tool.setuptools.package-data]
+mypkg = ["assets/*", "assets/**/*", "views/*"]
