@@ -4,7 +4,6 @@ Various HTTP routes the external world uses to communicate with the application.
 """
 
 import bottle as bt
-import cgi
 import logging
 import re
 import os.path
@@ -104,7 +103,12 @@ def post_new():
         # Form extraction
         if files:
             part = next(files.values())
-            charset = cgi.parse_header(part.content_type)[1].get('charset', 'utf-8')
+            content_type_params = {
+                name.strip(): value.strip()
+                for param in part.content_type.split(';')[1:]
+                for (name, _, value) in (param.partition('='),)
+            }
+            charset = content_type_params.get('charset', 'utf-8')
             code = part.file.read(config.MAXSIZE).decode(charset)
             ext = os.path.splitext(part.filename)[1][1:] or langtoext[config.DEFAULT_LANGUAGE]
         if forms:
