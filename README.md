@@ -52,7 +52,6 @@ Les sources peuvent être récupérées via Git et le service peut être install
 	$ git clone https://github.com/readthedocs-fr/bin.git rtdbin
 	$ cd rtdbin
 	$ python -m venv
-	$ venv/bin/pip install -r requirements.txt
 	$ venv/bin/pip install -e .
 
 Une fois installé, vous pouvez vous assurer que le système est correctement opérationnel en lançant la suite de tests unitaires et en vérifiant que le serveur démarre correctement.
