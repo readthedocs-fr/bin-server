@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.1](https://www.github.com/readthedocs-fr/bin-server/compare/v1.4.0...v1.4.1) (2026-02-03)
+
+
+### Bug Fixes
+
+* cgi has been removed from the python stdlib ([0a68559](https://www.github.com/readthedocs-fr/bin-server/commit/0a6855960bf1439b398d1ad14cf60c493b9250d8))
+
 ## [1.4.0](https://www.github.com/readthedocs-fr/bin-server/compare/v1.3.0...v1.4.0) (2023-03-13)
 
 
