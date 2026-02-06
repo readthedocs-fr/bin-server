@@ -6,6 +6,8 @@
         <link rel=stylesheet href="/assets/styles/monokai.css">
         <script src="/assets/scripts/loc.js" defer></script>
         <script src="/assets/scripts/report.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js" defer></script>
+        <script src="/assets/scripts/delete.js" defer type=module></script>
         <script src="/assets/scripts/change-lang.js" defer></script>
         <noscript>
             <style>
@@ -38,6 +40,12 @@
                     % end
                 % end
             </select>
+
+            <button class="control hidden" id=delete-button title="Supprimer le snippet">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm1 8a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                </svg>
+            </button>
 
             % if parentid:
             <a class="control" title="Voir la révision précédente" href="/{{parentid}}.{{ext}}">

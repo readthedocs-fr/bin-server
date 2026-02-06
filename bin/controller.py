@@ -46,6 +46,7 @@ def get_new_form():
 
     return bt.template(
         'newform.html',
+        token=secrets.token_urlsafe(16),
         languages=languages,
         default_language=lang,
         code=code,
@@ -64,6 +65,12 @@ def assets(filepath):
     """
     return bt.static_file(filepath, root=root.joinpath('assets'))
 
+@bt.route('/sw.js')
+def sw():
+    """
+    Get the Service Worker with a allowed scope to '/'.
+    """
+    return bt.static_file('/sw.js', root=root.joinpath('assets/scripts'))
 
 @bt.route('/new', method='POST')
 def post_new():
@@ -163,7 +170,6 @@ def get_html(snippetid, ext=None):
 
     :param snippetid: (path) required snippet id
     :param ext: (path) optional language file extension, used to determine the highlight backend
-    :param token: (query) optional the "admin" token
 
     :raises HTTPError: code 404 when the snippet is not found
     """
@@ -187,7 +193,6 @@ def get_html(snippetid, ext=None):
         ext=ext,
         snippetid=snippetid,
         parentid=snippet.parentid,
-        token=bt.request.query.token,
     )
 
 @bt.route('/<snippetid>', method='DELETE')

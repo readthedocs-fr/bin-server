@@ -148,3 +148,7 @@ input[type="number"] {
 #post-snippet:invalid .controls button svg {
     fill: #707070;
 }
+
+button.hidden {
+    display: none;
+}
